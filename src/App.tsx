@@ -76,9 +76,8 @@ function App() {
         delete tasks[todolistID]
     }
     const addToDoList = (newTitle: string) => {
-        let todolistID = v1()
-        todolistsDispatch(addTodolistAC(todolistID, newTitle))
-        tasksDispatch(addTodolistAC(todolistID, newTitle))
+        todolistsDispatch(addTodolistAC(newTitle))
+        tasksDispatch(addTodolistAC(newTitle))
     }
     const editTask = (todolistID: string, taskID: string, newTitle: string) => {
         tasksDispatch(editTaskAC(todolistID, taskID, newTitle))
