@@ -14,10 +14,7 @@ export const CHANGE_TODOLIST_FILTER = "CHANGE-TODOLIST-FILTER"
 //initialSate
 export let todolistID1 = v1();
 export let todolistID2 = v1();
-const initialStateForTodolists: Array<TodolistsType> = [
-    {id: todolistID1, title: 'What to learn', filter: 'all'},
-    {id: todolistID2, title: 'What to buy', filter: 'all'},
-]
+const initialStateForTodolists: Array<TodolistsType> = []
 //reducer
 export const todolistsReducer = (state: Array<TodolistsType> = initialStateForTodolists, action: ActionTodolistType): Array<TodolistsType> => {
     switch(action.type){

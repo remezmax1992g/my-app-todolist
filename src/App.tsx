@@ -11,12 +11,6 @@ import {
     editTodolistAC,
     removeTodolistAC,
 } from "./reducers/todolists-reducer";
-import {
-    addTaskAC,
-    changeStatusCheckboxAC,
-    editTaskAC,
-    removeTaskAC,
-} from "./reducers/tasks-reducer";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootState} from "./redux/redux";
 
@@ -35,28 +29,16 @@ export type TodolistsType = {
 function App() {
     const dispatch = useDispatch()
     const todolists = useSelector<AppRootState, Array<TodolistsType>>(state => state.todolists)
-    const tasks = useSelector<AppRootState, TasksType>(state => state.tasks)
     //function
     const changeFilter = (todolistID: string, filter: FilteredValuesType) => {
         dispatch(changeFilterTodolistAC(todolistID, filter))
     }
-    const removeTask = (todolistID: string, taskID: string) => {
-        dispatch(removeTaskAC(todolistID, taskID))
-    }
-    const addTask = (todolistID: string, titleInput: string) => {
-        dispatch(addTaskAC(todolistID, titleInput))
-    }
-    const changeStatusCheckbox = (todolistID: string, taskID: string, isDone: boolean) => {
-      dispatch(changeStatusCheckboxAC(todolistID, taskID, isDone))
-    }
+
     const removeTodolist = (todolistID: string) => {
        dispatch(removeTodolistAC(todolistID))
     }
     const addToDoList = (newTitle: string) => {
         dispatch(addTodolistAC(newTitle))
-    }
-    const editTask = (todolistID: string, taskID: string, newTitle: string) => {
-        dispatch(editTaskAC(todolistID, taskID, newTitle))
     }
     const editToDoList = (todoListID: string, newTitle: string) => {
         dispatch(editTodolistAC(todoListID, newTitle))
@@ -90,14 +72,9 @@ function App() {
                                     key={tl.id}
                                     todolistID={tl.id}
                                     title={tl.title}
-                                    tasks={tasks[tl.id]}
                                     filter={tl.filter}
                                     changeFilter={changeFilter}
-                                    removeTask={removeTask}
-                                    addTask={addTask}
-                                    changeStatusCheckBox={changeStatusCheckbox}
                                     removeTodolist={removeTodolist}
-                                    editTask={editTask}
                                     editToDoList={editToDoList}
                                 /></Paper>
                         </Grid>
