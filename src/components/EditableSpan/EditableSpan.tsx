@@ -9,7 +9,7 @@ type EditablePropsType = {
 }
 
 const EditableSpan = (props: EditablePropsType) => {
-    //state
+    //reducers
     const [editMode, setEditMode] = useState<boolean>(false)
     let [newTitle, setNewTitle] = useState<string>(props.title)
     //function

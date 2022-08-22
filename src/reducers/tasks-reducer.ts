@@ -1,12 +1,18 @@
 import {TasksType} from "../App";
 import {v1} from "uuid";
-import {ADD_TODOLIST, AddTodolistACType, REMOVE_TODOLIST, RemoveTodolistACType} from "./todolists-reducer";
-
+import {
+    ADD_TODOLIST,
+    AddTodolistACType,
+    REMOVE_TODOLIST,
+    RemoveTodolistACType,
+    todolistID1,
+    todolistID2
+} from "./todolists-reducer";
+//types
 type RemoveTaskACType = ReturnType<typeof removeTaskAC>
 type AddTaskACType = ReturnType<typeof addTaskAC>
 type ChangeStatusCheckboxACType = ReturnType<typeof changeStatusCheckboxAC>
 type EditTaskACType = ReturnType<typeof editTaskAC>
-
 type ActionTaskType =
     RemoveTaskACType
     | RemoveTodolistACType
@@ -14,13 +20,30 @@ type ActionTaskType =
     | AddTodolistACType
     | ChangeStatusCheckboxACType
     | EditTaskACType
-
+//constants
 export const REMOVE_TASK = "REMOVE-TASK"
 export const ADD_TASK = "ADD-TASK"
 export const CHANGE_STATUS_CHECKBOX = "CHANGE-STATUS-CHECKBOX"
 export const EDIT_TASK = "EDIT-TASK"
-
-export const tasksReducer = (state: TasksType, action: ActionTaskType): TasksType => {
+//initialState
+const initialStateForTasks: TasksType = {
+    [todolistID1]: [
+        {id: v1(), title: "HTML&CSS", isDone: true},
+        {id: v1(), title: "JS", isDone: true},
+        {id: v1(), title: "ReactJS", isDone: false},
+        {id: v1(), title: "Rest API", isDone: false},
+        {id: v1(), title: "GraphQL", isDone: false},
+    ],
+    [todolistID2]: [
+        {id: v1(), title: "Milk", isDone: true},
+        {id: v1(), title: "Bread", isDone: true},
+        {id: v1(), title: "Coca-cola", isDone: false},
+        {id: v1(), title: "Yogurt", isDone: false},
+        {id: v1(), title: "Chicken", isDone: false},
+    ]
+}
+//reducer
+export const tasksReducer = (state: TasksType = initialStateForTasks, action: ActionTaskType): TasksType => {
     switch (action.type) {
         case REMOVE_TASK:
             return {
@@ -61,10 +84,10 @@ export const tasksReducer = (state: TasksType, action: ActionTaskType): TasksTyp
                 } : t)
             }
         default:
-            throw new Error("I don't understand this action type")
+            return state
     }
 }
-
+//ActionCreator
 export const removeTaskAC = (todolistID: string, id: string) => {
     return {
         type: REMOVE_TASK,

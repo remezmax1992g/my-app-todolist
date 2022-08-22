@@ -9,7 +9,7 @@ type AddItemFormTypeProps = {
 }
 
 const AddItemForm = (props: AddItemFormTypeProps) => {
-    //state
+    //reducers
     const [title, setTitle] = useState<string>("")
     const [error, setError] = useState<boolean>(false)
     //function
@@ -43,7 +43,7 @@ const AddItemForm = (props: AddItemFormTypeProps) => {
                        onClick={onClickAddTask}
                        onChange={onChangeInputTitle}
                        onKeyDown={onKeyboardAddTask}
-                       error={!!error}
+                       error={error}
                        helperText={error && "Title is required!"}
                        />
             <IconButton onClick={onClickAddTask} color={"primary"}>
