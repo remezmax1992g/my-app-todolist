@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useState} from 'react';
+import React, {ChangeEvent, useCallback, useState} from 'react';
 import {TextField} from "@mui/material";
 
 type EditablePropsType = {
@@ -6,34 +6,35 @@ type EditablePropsType = {
     title: string
     isDone?: boolean
     //function
-    onChange: (newTitle: string) => void
+    onChangeTitle: (newTitle: string) => void
 }
 
-const EditableSpan = (props: EditablePropsType) => {
+export const EditableSpan = React.memo((props: EditablePropsType) => {
     //state
     const [editMode, setEditMode] = useState<boolean>(false)
-    let [newTitle, setNewTitle] = useState<string>(() => {
-        return ""})
+    let [newTitle, setNewTitle] = useState<string>("")
     //function
     const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
         setNewTitle(e.currentTarget.value)
+
     }
-  const addTask = () => {
-      setEditMode(!editMode)
-        if(newTitle !== ""){
-            props.onChange(newTitle)
+    const addNewTitle = () => {
+        setEditMode(!editMode)
+        if (newTitle !== "") {
+            props.onChangeTitle(newTitle)
         }
     }
-    const editHandler = () => {
+    const editHandler = useCallback(() => {
         setEditMode(!editMode)
         setNewTitle(props.title)
-    }
+    }, [editMode, props.title])
     //interface
     return (
         editMode
-        ? <TextField value={newTitle} variant={"standard"} onChange={onChangeHandler} onBlur={addTask} autoFocus/>
-        :<span className={props.isDone ? "isDone" : "isActive"} onDoubleClick={editHandler}>{props.title}</span>
+            ?
+            <TextField value={newTitle} variant={"standard"} onChange={onChangeHandler} onBlur={addNewTitle} autoFocus/>
+            : <span className={props.isDone ? "isDone" : "isActive"} onDoubleClick={editHandler}>{props.title}</span>
     );
-};
+});
 
 export default EditableSpan;

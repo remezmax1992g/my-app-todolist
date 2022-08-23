@@ -44,31 +44,32 @@ const ToDoList = React.memo((props: ToDoListPropsType) => {
             tasksAfterFiltering = tasks
     }
     //function
-    const removeTodolistHandler = () => {
-        props.removeTodolist(props.todolistID)
-    }
-    const editToDoListHandler = (newTitle: string) => {
+    const removeTodolistHandler = useCallback(() => {
+        props.removeTodolist(props.todolistID)},[props])
+    const editToDoListHandler = useCallback((newTitle: string) => {
         props.editToDoList(props.todolistID, newTitle)
-    }
+    },[props])
     const addTaskHandler = useCallback((newTitle: string) => {
         dispatch(addTaskAC(props.todolistID, newTitle))
-    },[dispatch])
-    const removeTaskHandler = useCallback((taskID: string) => {dispatch(removeTaskAC(props.todolistID, taskID))}, [dispatch])
-    const changeStatusCheckboxHandler = useCallback((taskID: string, isDone: boolean) => {dispatch(changeStatusCheckboxAC(props.todolistID, taskID, isDone))},[dispatch])
-    const editTaskHandler = useCallback((taskID: string, newTitle: string) => {dispatch(editTaskAC(props.todolistID, taskID, newTitle))}, [dispatch])
+    },[dispatch, props.todolistID])
+    const removeTaskHandler = useCallback((taskID: string) => {dispatch(removeTaskAC(props.todolistID, taskID))}, [dispatch, props.todolistID])
+    const changeStatusCheckboxHandler = useCallback((taskID: string, isDone: boolean) => {dispatch(changeStatusCheckboxAC(props.todolistID, taskID, isDone))},[dispatch, props.todolistID])
+    const editTaskHandler = useCallback((taskID: string, newTitle: string) => {dispatch(editTaskAC(props.todolistID, taskID, newTitle))}, [dispatch, props.todolistID])
     //interface
     return (
         <span className={"Todolist"}>
             <h2>
-                <EditableSpan title={props.title} onChange={editToDoListHandler}/>
+                <EditableSpan title={props.title} onChangeTitle={editToDoListHandler}/>
                  <IconButton onClick={removeTodolistHandler}>
                     <DeleteIcon/>
                  </IconButton>
             </h2>
             <span>
                 <AddItemForm addItem={addTaskHandler} label={"Type task"}/>
-                <TasksItem tasks={tasksAfterFiltering} todolistID={props.todolistID} removeTask={removeTaskHandler}
-                           changeStatusCheckBox={changeStatusCheckboxHandler} editTask={editTaskHandler}/>
+                <TasksItem tasks={tasksAfterFiltering}
+                           removeTask={removeTaskHandler}
+                           changeStatusCheckBox={changeStatusCheckboxHandler}
+                           editTask={editTaskHandler}/>
                 <FilteredButton todolistID={props.todolistID} filter={props.filter} changeFilter={props.changeFilter}/>
             </span>
         </span>
