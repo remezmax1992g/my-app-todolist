@@ -15,11 +15,10 @@ const TasksItem = React.memo((props: TaskItemTypeProps) => {
         //value
         const taskListItem = props.tasks.length
             ? props.tasks.map((t, index) =>
-                <Task index={index}
-                      task={t}
-                      editTask={props.editTask}
-                      removeTask={props.removeTask}
-                      changeStatusCheckBox={props.changeStatusCheckBox}/>
+                <div key={index}><Task task={t}
+                         editTask={props.editTask}
+                         removeTask={props.removeTask}
+                         changeStatusCheckBox={props.changeStatusCheckBox}/></div>
             )
             : <span>Your task's list is empty</span>
         return (

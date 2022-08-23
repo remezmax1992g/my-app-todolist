@@ -64,8 +64,8 @@ function App() {
             </AppBar>
             <Container fixed>
                 <Grid container style={{padding: "20px"}}><AddItemForm addItem={addToDoList} label={"Type new to-do list"}/></Grid>
-                <Grid container spacing={10}>{todolists.map((tl) => {
-                    return (<Grid item>
+                <Grid container spacing={10}>{todolists.map((tl, index) => {
+                    return (<Grid item key={index}>
                             <Paper style={{padding:"15px"}}>
                                 <ToDoList
                                     key={tl.id}

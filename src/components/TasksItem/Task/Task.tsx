@@ -5,7 +5,6 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import {TaskType} from "../../../ToDoList";
 
 type TaskPropsType = {
-    index: number
     task: TaskType
     changeStatusCheckBox: (taskID: string, isDone: boolean) => void
     editTask: (taskID: string, newTitle: string) => void
@@ -25,7 +24,7 @@ const Task = React.memo((props: TaskPropsType) => {
         }, [props])
 
         return (
-            <div key={props.index}>
+            <span>
                 <Checkbox checked={props.task.isDone}
                           onChange={changeStatusCheckboxHandler}/>
                 <EditableSpan title={props.task.title}
@@ -35,7 +34,7 @@ const Task = React.memo((props: TaskPropsType) => {
                             onClick={removeTaskHandler}>
                     <DeleteIcon/>
                 </IconButton>
-            </div>
+            </span>
         );
     }
 )
