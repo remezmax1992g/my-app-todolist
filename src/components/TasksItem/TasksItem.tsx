@@ -15,9 +15,9 @@ type TaskItemTypeProps = {
 }
 
 const TasksItem = (props: TaskItemTypeProps) => {
-
     //value
-    const taskListItem = props.tasks.length ? props.tasks.map((t, index) => {
+    const taskListItem = props.tasks.length
+        ? props.tasks.map((t, index) => {
         const changeStatusCheckbox = (event: ChangeEvent<HTMLInputElement>) => {
             props.changeStatusCheckBox(t.id, event.currentTarget.checked)
         }
@@ -28,7 +28,8 @@ const TasksItem = (props: TaskItemTypeProps) => {
                 <DeleteIcon/>
             </IconButton>
         </div>)
-    }) : <span>Your task's list is empty</span>
+    })
+        : <span>Your task's list is empty</span>
 
     return (
         <span>

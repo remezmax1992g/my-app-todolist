@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import ToDoList, {TaskType} from "./ToDoList";
 import './App.css';
 import AddItemForm from "./components/AddItemForm/AddItemForm";
@@ -13,36 +13,35 @@ import {
 } from "./reducers/todolists-reducer";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootState} from "./redux/redux";
-
+//types
 export type FilteredValuesType = "all" | "active" | "completed";
-
 export type TasksType = {
     [key: string]: Array<TaskType>
 }
-
 export type TodolistsType = {
+    //value
     id: string,
     title: string,
     filter: FilteredValuesType
 }
-
+//Component
 function App() {
+    //Store
     const dispatch = useDispatch()
     const todolists = useSelector<AppRootState, Array<TodolistsType>>(state => state.todolists)
     //function
-    const changeFilter = (todolistID: string, filter: FilteredValuesType) => {
+    const changeFilter = useCallback((todolistID: string, filter: FilteredValuesType) => {
         dispatch(changeFilterTodolistAC(todolistID, filter))
-    }
-
-    const removeTodolist = (todolistID: string) => {
+    }, [dispatch])
+    const removeTodolist = useCallback((todolistID: string) => {
        dispatch(removeTodolistAC(todolistID))
-    }
-    const addToDoList = (newTitle: string) => {
+    }, [dispatch]);
+    const addToDoList = useCallback((newTitle: string) => {
         dispatch(addTodolistAC(newTitle))
-    }
-    const editToDoList = (todoListID: string, newTitle: string) => {
+    },[dispatch]);
+    const editToDoList = useCallback((todoListID: string, newTitle: string) => {
         dispatch(editTodolistAC(todoListID, newTitle))
-    }
+    }, [dispatch]);
     //UI
     return (
         <div className={"App"}>
@@ -64,7 +63,7 @@ function App() {
                 </Toolbar>
             </AppBar>
             <Container fixed>
-                <Grid container style={{padding: "20px"}}><AddItemForm addTask={addToDoList} label={"Type new to-do list"}/></Grid>
+                <Grid container style={{padding: "20px"}}><AddItemForm addItem={addToDoList} label={"Type new to-do list"}/></Grid>
                 <Grid container spacing={10}>{todolists.map((tl) => {
                     return (<Grid item>
                             <Paper style={{padding:"15px"}}>

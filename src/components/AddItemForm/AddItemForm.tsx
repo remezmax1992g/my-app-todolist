@@ -5,10 +5,10 @@ import {AddCircle} from "@mui/icons-material";
 type AddItemFormTypeProps = {
     label: string
     //function
-    addTask: (titleInput: string) => void
+    addItem: (titleInput: string) => void
 }
 
-const AddItemForm = (props: AddItemFormTypeProps) => {
+const AddItemForm = React.memo((props: AddItemFormTypeProps) => {
     //reducers
     const [title, setTitle] = useState<string>("")
     const [error, setError] = useState<boolean>(false)
@@ -16,7 +16,7 @@ const AddItemForm = (props: AddItemFormTypeProps) => {
     const onClickAddTask = () => {
         let newTitle = title.trim()
         if (newTitle) {
-            props.addTask(newTitle)
+            props.addItem(newTitle)
             error && setError(false)
         } else {
             setError(true)
@@ -24,7 +24,7 @@ const AddItemForm = (props: AddItemFormTypeProps) => {
         setTitle("")
     }
     const onChangeInputTitle = (event: ChangeEvent<HTMLInputElement>) => {
-        setError(false)
+        error && setError(false)
         let currentTitle = event.currentTarget.value
         setTitle(currentTitle)
     }
@@ -51,6 +51,6 @@ const AddItemForm = (props: AddItemFormTypeProps) => {
             </IconButton>
         </div>
     );
-};
+});
 
 export default AddItemForm;
