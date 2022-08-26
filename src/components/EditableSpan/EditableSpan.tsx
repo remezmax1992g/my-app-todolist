@@ -9,7 +9,7 @@ type EditablePropsType = {
     onChangeTitle: (newTitle: string) => void
 }
 
-export const EditableSpan = React.memo((props: EditablePropsType) => {
+export const EditableSpan = React.memo(({title, isDone, onChangeTitle}: EditablePropsType) => {
     //state
     const [editMode, setEditMode] = useState<boolean>(false)
     let [newTitle, setNewTitle] = useState<string>("")
@@ -21,19 +21,19 @@ export const EditableSpan = React.memo((props: EditablePropsType) => {
     const addNewTitle = () => {
         setEditMode(!editMode)
         if (newTitle !== "") {
-            props.onChangeTitle(newTitle)
+            onChangeTitle(newTitle)
         }
     }
     const editHandler = useCallback(() => {
         setEditMode(!editMode)
-        setNewTitle(props.title)
-    }, [editMode, props.title])
+        setNewTitle(title)
+    }, [editMode, title])
     //interface
     return (
         editMode
             ?
             <TextField value={newTitle} variant={"standard"} onChange={onChangeHandler} onBlur={addNewTitle} autoFocus/>
-            : <span className={props.isDone ? "isDone" : "isActive"} onDoubleClick={editHandler}>{props.title}</span>
+            : <span className={isDone ? "isDone" : "isActive"} onDoubleClick={editHandler}>{title}</span>
     );
 });
 

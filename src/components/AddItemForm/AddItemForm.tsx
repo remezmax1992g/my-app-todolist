@@ -3,12 +3,13 @@ import {IconButton, TextField} from "@mui/material";
 import {AddCircle} from "@mui/icons-material";
 
 type AddItemFormTypeProps = {
+    //value
     label: string
     //function
     addItem: (titleInput: string) => void
 }
 
-const AddItemForm = React.memo((props: AddItemFormTypeProps) => {
+const AddItemForm = React.memo(({label, addItem}: AddItemFormTypeProps) => {
     //reducers
     const [title, setTitle] = useState<string>("")
     const [error, setError] = useState<boolean>(false)
@@ -16,7 +17,7 @@ const AddItemForm = React.memo((props: AddItemFormTypeProps) => {
     const onClickAddTask = () => {
         let newTitle = title.trim()
         if (newTitle) {
-            props.addItem(newTitle)
+           addItem(newTitle)
             error && setError(false)
         } else {
             setError(true)
@@ -39,7 +40,7 @@ const AddItemForm = React.memo((props: AddItemFormTypeProps) => {
             <TextField className={error ? "inputError" : "inputName"}
                        variant={"outlined"}
                        value={title}
-                       label={props.label}
+                       label={label}
                        onClick={onClickAddTask}
                        onChange={onChangeInputTitle}
                        onKeyDown={onKeyboardAddTask}

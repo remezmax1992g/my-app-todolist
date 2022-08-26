@@ -27,13 +27,13 @@ type ToDoListPropsType = {
     editToDoList: (todolistID: string, newTitle: string) => void
 }
 //Component
-const ToDoList = React.memo((props: ToDoListPropsType) => {
+const ToDoList = React.memo(({todolistID,title,filter,changeFilter, removeTodolist,editToDoList}: ToDoListPropsType) => {
     //store
     const dispatch = useDispatch()
-    const tasks = useSelector<AppRootState, Array<TaskType>>(state => state.tasks[props.todolistID])
+    const tasks = useSelector<AppRootState, Array<TaskType>>(state => state.tasks[todolistID])
     //filtering
     let tasksAfterFiltering: Array<TaskType>
-    switch (props.filter) {
+    switch (filter) {
         case "active":
             tasksAfterFiltering = tasks.filter(t => !t.isDone)
             break
@@ -45,21 +45,21 @@ const ToDoList = React.memo((props: ToDoListPropsType) => {
     }
     //function
     const removeTodolistHandler = useCallback(() => {
-        props.removeTodolist(props.todolistID)},[props])
+       removeTodolist(todolistID)},[removeTodolist, todolistID])
     const editToDoListHandler = useCallback((newTitle: string) => {
-        props.editToDoList(props.todolistID, newTitle)
-    },[props])
+        editToDoList(todolistID, newTitle)
+    },[editToDoList, todolistID])
     const addTaskHandler = useCallback((newTitle: string) => {
-        dispatch(addTaskAC(props.todolistID, newTitle))
-    },[dispatch, props.todolistID])
-    const removeTaskHandler = useCallback((taskID: string) => {dispatch(removeTaskAC(props.todolistID, taskID))}, [dispatch, props.todolistID])
-    const changeStatusCheckboxHandler = useCallback((taskID: string, isDone: boolean) => {dispatch(changeStatusCheckboxAC(props.todolistID, taskID, isDone))},[dispatch, props.todolistID])
-    const editTaskHandler = useCallback((taskID: string, newTitle: string) => {dispatch(editTaskAC(props.todolistID, taskID, newTitle))}, [dispatch, props.todolistID])
+        dispatch(addTaskAC(todolistID, newTitle))
+    },[dispatch, todolistID])
+    const removeTaskHandler = useCallback((taskID: string) => {dispatch(removeTaskAC(todolistID, taskID))}, [dispatch, todolistID])
+    const changeStatusCheckboxHandler = useCallback((taskID: string, isDone: boolean) => {dispatch(changeStatusCheckboxAC(todolistID, taskID, isDone))},[dispatch, todolistID])
+    const editTaskHandler = useCallback((taskID: string, newTitle: string) => {dispatch(editTaskAC(todolistID, taskID, newTitle))}, [dispatch, todolistID])
     //interface
     return (
         <span className={"Todolist"}>
             <h2>
-                <EditableSpan title={props.title} onChangeTitle={editToDoListHandler}/>
+                <EditableSpan title={title} onChangeTitle={editToDoListHandler}/>
                  <IconButton onClick={removeTodolistHandler}>
                     <DeleteIcon/>
                  </IconButton>
@@ -70,7 +70,7 @@ const ToDoList = React.memo((props: ToDoListPropsType) => {
                            removeTask={removeTaskHandler}
                            changeStatusCheckBox={changeStatusCheckboxHandler}
                            editTask={editTaskHandler}/>
-                <FilteredButton todolistID={props.todolistID} filter={props.filter} changeFilter={props.changeFilter}/>
+                <FilteredButton todolistID={todolistID} filter={filter} changeFilter={changeFilter}/>
             </span>
         </span>
     );

@@ -8,18 +8,18 @@ type FilteredButtonType = {
     changeFilter: (todolistID: string, filter: FilteredValuesType) => void
 }
 
-const FilteredButton = React.memo((props: FilteredButtonType) => {
+const FilteredButton = React.memo(({todolistID, filter, changeFilter}: FilteredButtonType) => {
         const getChangeFilterHandler = useCallback((todolistID: string, filter: FilteredValuesType) => {
-            return props.changeFilter(todolistID, filter)
-        }, [props])
+            return changeFilter(todolistID, filter)
+        }, [changeFilter])
         return (
             <div>
-                <Button variant={props.filter === "all" ? "contained" : "text"} color={"inherit"}
-                        onClick={() => getChangeFilterHandler(props.todolistID, "all")}>all</Button>
-                <Button variant={props.filter === "active" ? "contained" : "text"} color={"success"}
-                        onClick={() => getChangeFilterHandler(props.todolistID, "active")}>active</Button>
-                <Button variant={props.filter === "completed" ? "contained" : "text"} color={"error"}
-                        onClick={() => getChangeFilterHandler(props.todolistID, "completed")}>completed</Button>
+                <Button variant={filter === "all" ? "contained" : "text"} color={"inherit"}
+                        onClick={() => getChangeFilterHandler(todolistID, "all")}>all</Button>
+                <Button variant={filter === "active" ? "contained" : "text"} color={"success"}
+                        onClick={() => getChangeFilterHandler(todolistID, "active")}>active</Button>
+                <Button variant={filter === "completed" ? "contained" : "text"} color={"error"}
+                        onClick={() => getChangeFilterHandler(todolistID, "completed")}>completed</Button>
             </div>
         );
     }

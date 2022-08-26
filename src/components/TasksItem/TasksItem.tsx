@@ -11,14 +11,14 @@ type TaskItemTypeProps = {
     editTask: (taskID: string, newTitle: string) => void
 }
 
-const TasksItem = React.memo((props: TaskItemTypeProps) => {
+const TasksItem = React.memo(({tasks, changeStatusCheckBox, removeTask, editTask}: TaskItemTypeProps) => {
         //value
-        const taskListItem = props.tasks.length
-            ? props.tasks.map((t, index) =>
+        const taskListItem = tasks.length
+            ? tasks.map((t, index) =>
                 <div key={index}><Task task={t}
-                         editTask={props.editTask}
-                         removeTask={props.removeTask}
-                         changeStatusCheckBox={props.changeStatusCheckBox}/></div>
+                         editTask={editTask}
+                         removeTask={removeTask}
+                         changeStatusCheckBox={changeStatusCheckBox}/></div>
             )
             : <span>Your task's list is empty</span>
         return (
