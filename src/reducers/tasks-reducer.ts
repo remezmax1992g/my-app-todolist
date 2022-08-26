@@ -38,6 +38,7 @@ export const tasksReducer = (state: TasksType = initialStateForTasks, action: Ac
                 delete copyState[action.payload.todolistID]
             return copyState
         case ADD_TASK:
+            // console.log({state, action})
             return {
                 ...state,
                 [action.payload.todolistID]: [{
@@ -61,7 +62,7 @@ export const tasksReducer = (state: TasksType = initialStateForTasks, action: Ac
         case EDIT_TASK:
             return {
                 ...state,
-                [action.payload.todolistID]: state[action.payload.todolistID].map(t => t.id === action.payload.id ? {
+                [action.payload.todolistID]: state[action.payload.todolistID]?.map(t => t.id === action.payload.id ? {
                     ...t,
                     title: action.payload.newTitle
                 } : t)
