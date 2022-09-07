@@ -1,14 +1,16 @@
 import {action} from "@storybook/addon-actions";
 import FilteredButton from "./FilteredButton";
+import {ComponentStory} from "@storybook/react";
 
 export default {
     title: "FilteredButton Component",
-    component: FilteredButton
+    component: FilteredButton,
+    args:{
+        todolistID: "1",
+        filter: "all",
+        changeFilter: action("Filter was changed")
+    }
 }
-const onChangeFilterCallback = action("Filter was changed")
-
-export const FilteredButtonBaseExample = () => {
-    return <>
-        <FilteredButton todolistID={"1"} filter={"all"} changeFilter={onChangeFilterCallback}/>
-    </>
-}
+const Template: ComponentStory<typeof FilteredButton> =(args)=> <FilteredButton {...args}/>
+export const FilteredButtonStory = Template.bind({})
+FilteredButtonStory.args = {}
