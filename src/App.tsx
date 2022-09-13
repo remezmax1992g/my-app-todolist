@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import ToDoList from "./ToDoList";
 import './App.css';
 import AddItemForm from "./components/AddItemForm/AddItemForm";
@@ -8,28 +8,30 @@ import Button from "@mui/material/Button";
 import {
     addTodolistAC,
     changeFilterTodolistAC,
-    editTodolistAC, FilteredValuesType,
-    removeTodolistAC, TodolistEntityType,
+    editTodolistAC, fetchTodolistsTC, FilteredValuesType,
+    removeTodolistAC
 } from "./reducers/todolists-reducer";
-import {useDispatch, useSelector} from "react-redux";
-import {AppRootState} from "./redux/redux";
+import {useAppDispatch, useAppSelector} from "./redux/hook";
 
 
 //Component
 function App() {
     //Store
-    const dispatch = useDispatch()
-    const todolists = useSelector<AppRootState, Array<TodolistEntityType>>(state => state.todolists)
+    const dispatch = useAppDispatch()
+    const todolists = useAppSelector(state => state.todolists)
     //function
+    useEffect(() => {
+       dispatch(fetchTodolistsTC())
+    }, [])
     const changeFilter = useCallback((todolistID: string, filter: FilteredValuesType) => {
         dispatch(changeFilterTodolistAC(todolistID, filter))
     }, [dispatch])
     const removeTodolist = useCallback((todolistID: string) => {
-       dispatch(removeTodolistAC(todolistID))
+        dispatch(removeTodolistAC(todolistID))
     }, [dispatch]);
     const addToDoList = useCallback((newTitle: string) => {
         dispatch(addTodolistAC(newTitle))
-    },[dispatch]);
+    }, [dispatch]);
     const editToDoList = useCallback((todoListID: string, newTitle: string) => {
         dispatch(editTodolistAC(todoListID, newTitle))
     }, [dispatch]);
@@ -47,17 +49,18 @@ function App() {
                     >
                         <Menu/>
                     </IconButton>
-                    <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
+                    <Typography variant="h6" component="div" sx={{flexGrow: 2}}>
                         Menu
                     </Typography>
                     <Button color="inherit">Login</Button>
                 </Toolbar>
             </AppBar>
             <Container fixed>
-                <Grid container style={{padding: "20px"}}><AddItemForm addItem={addToDoList} label={"Type new to-do list"}/></Grid>
+                <Grid container style={{padding: "10px"}}><AddItemForm addItem={addToDoList}
+                                                                       label={"Type new to-do list"}/></Grid>
                 <Grid container spacing={10}>{todolists.map((tl, index) => {
                     return (<Grid item key={index}>
-                            <Paper style={{padding:"15px"}}>
+                            <Paper style={{padding: "10px"}}>
                                 <ToDoList
                                     key={tl.id}
                                     todolistID={tl.id}
@@ -69,7 +72,9 @@ function App() {
                                 /></Paper>
                         </Grid>
                     )
-                })}</Grid></Container>
+                })}
+                </Grid>
+            </Container>
         </div>
     )
 }

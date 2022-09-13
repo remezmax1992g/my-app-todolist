@@ -1,4 +1,12 @@
-import {addTaskAC, changeStatusCheckboxAC, editTaskAC, removeTaskAC, tasksReducer, TasksType} from "./tasks-reducer";
+import {
+    addTaskAC,
+    changeStatusCheckboxAC,
+    editTaskAC,
+    removeTaskAC,
+    setTasksAC,
+    tasksReducer,
+    TasksType
+} from "./tasks-reducer";
 import {TaskPriority, TaskStatus} from "../api/tasks-api";
 
 let startState: TasksType
@@ -45,6 +53,14 @@ test('title of specified task should be changed', () => {
     expect(endState["todolistID2"][1].title).toBe("Milkyway");
     expect(endState["todolistID1"][1].title).toBe("JS");
 });
+test('tasks should be set to the state', () => {
+
+    const endState = tasksReducer({["todolistID1"]:[],["todolistID2"]:[]}, setTasksAC("todolistID1", startState["todolistID1"]) )
+    expect(endState["todolistID1"].length).toBe(3);
+    expect(endState["todolistID2"].length).toBe(0);
+
+});
+
 
 
 

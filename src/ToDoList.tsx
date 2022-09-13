@@ -1,15 +1,14 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import TasksItem from "./components/TasksItem/TasksItem";
 import AddItemForm from "./components/AddItemForm/AddItemForm";
 import EditableSpan from "./components/EditableSpan/EditableSpan";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {IconButton} from "@mui/material";
 import FilteredButton from "./components/FilteredButton/FilteredButton";
-import {useDispatch, useSelector} from "react-redux";
-import {AppRootState} from "./redux/redux";
-import {addTaskAC, changeStatusCheckboxAC, editTaskAC, removeTaskAC} from "./reducers/tasks-reducer";
+import {addTaskAC, changeStatusCheckboxAC, editTaskAC, fetchTaskTC, removeTaskAC} from "./reducers/tasks-reducer";
 import {FilteredValuesType} from "./reducers/todolists-reducer";
 import {TaskStatus, TaskType} from "./api/tasks-api";
+import {useAppDispatch, useAppSelector} from "./redux/hook";
 //type
 type ToDoListPropsType = {
     //value
@@ -24,8 +23,8 @@ type ToDoListPropsType = {
 //Component
 const ToDoList = React.memo(({todolistID,title,filter,changeFilter, removeTodolist,editToDoList}: ToDoListPropsType) => {
     //store
-    const dispatch = useDispatch()
-    const tasks = useSelector<AppRootState, Array<TaskType>>(state => state.tasks[todolistID])
+    const dispatch = useAppDispatch()
+    const tasks = useAppSelector(state => state.tasks[todolistID])
     //filtering
     let tasksAfterFiltering: Array<TaskType>
     switch (filter) {
@@ -39,6 +38,9 @@ const ToDoList = React.memo(({todolistID,title,filter,changeFilter, removeTodoli
             tasksAfterFiltering = tasks
     }
     //function
+    useEffect(() => {
+        dispatch(fetchTaskTC(todolistID))
+    })
     const removeTodolistHandler = useCallback(() => {
        removeTodolist(todolistID)},[removeTodolist, todolistID])
     const editToDoListHandler = useCallback((newTitle: string) => {
