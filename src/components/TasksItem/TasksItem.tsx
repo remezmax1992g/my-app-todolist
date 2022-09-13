@@ -1,12 +1,12 @@
 import React from 'react';
-import {TaskType} from "../../ToDoList";
 import Task from "./Task/Task";
+import {TaskStatus, TaskType} from "../../api/tasks-api";
 
 type TaskItemTypeProps = {
     //value
     tasks: Array<TaskType>
     //function
-    changeStatusCheckBox: (taskID: string, isDone: boolean) => void
+    changeStatusCheckBox: (taskID: string, status: TaskStatus) => void
     removeTask: (taskID: string) => void
     editTask: (taskID: string, newTitle: string) => void
 }

@@ -2,6 +2,7 @@ import {action} from "@storybook/addon-actions";
 import TasksItem from "./TasksItem";
 import {v1} from "uuid";
 import {ComponentMeta, ComponentStory} from "@storybook/react";
+import {TaskPriority, TaskStatus} from "../../api/tasks-api";
 
 export default {
     title: "TaskItem Component",
@@ -10,9 +11,10 @@ export default {
         changeStatusCheckBox: action("Status was changed"),
         editTask: action("Title was edited"),
         removeTask: action("Task was removed"),
-        tasks: [{id: v1(), isDone: true, title: "CSS"},
-            {id: v1(), isDone: false, title: "Storybook"},
-            {id: v1(), isDone: true, title: "JS"},],
+        tasks: [{id: v1(), title: "CSS", description: "No information", status: TaskStatus.New, priority: TaskPriority.Low, startDate: "", deadline: "", todoListId: "td1", order: 0},
+            {id: v1(), title: "HTML", description: "No information", status: TaskStatus.New, priority: TaskPriority.Low, startDate: "", deadline: "", todoListId: "td1", order: 0},
+            {id: v1(), title: "JS", description: "No information", status: TaskStatus.New, priority: TaskPriority.Low, startDate: "", deadline: "", todoListId: "td1", order: 0},
+         ],
     }
 } as ComponentMeta<typeof TasksItem>;
 

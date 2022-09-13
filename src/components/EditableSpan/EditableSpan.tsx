@@ -1,15 +1,16 @@
 import React, {ChangeEvent, useCallback, useState} from 'react';
 import {TextField} from "@mui/material";
+import {TaskStatus} from "../../api/tasks-api";
 
 type EditablePropsType = {
     //value
     title: string
-    isDone?: boolean
+    status?: TaskStatus
     //function
     onChangeTitle: (newTitle: string) => void
 }
 
-export const EditableSpan = React.memo(({title, isDone, onChangeTitle}: EditablePropsType) => {
+export const EditableSpan = React.memo(({title, status, onChangeTitle}: EditablePropsType) => {
     //state
     const [editMode, setEditMode] = useState<boolean>(false)
     let [newTitle, setNewTitle] = useState<string>("")
@@ -33,7 +34,7 @@ export const EditableSpan = React.memo(({title, isDone, onChangeTitle}: Editable
         editMode
             ?
             <TextField value={newTitle} variant={"standard"} onChange={onChangeHandler} onBlur={addNewTitle} autoFocus/>
-            : <span className={isDone ? "isDone" : "isActive"} onDoubleClick={editHandler}>{title}</span>
+            : <span onDoubleClick={editHandler}>{title}</span>
     );
 });
 

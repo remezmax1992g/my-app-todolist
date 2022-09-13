@@ -15,19 +15,31 @@ export type TasksType = {
     totalCount: number
     error: string | null
 }
-type TaskType = {
+export type TaskType = {
     description: string
     title: string
-    completed: boolean
-    status: number
-    priority: number
+    status: TaskStatus
+    priority: TaskPriority
     startDate: string
     deadline: string
     id: string
     todoListId: string
     order: number
 }
+export enum TaskStatus{
+    New = 0,
+    InProgress = 1,
+    Completed = 2,
+    Draft = 3
 
+}
+export enum TaskPriority{
+    Low = 0,
+    Middle = 1,
+    High= 2,
+    Urgently = 3,
+    Later= 4
+}
 type ResponseTaskType<D = {}> = {
     data: D
     messages: Array<string>

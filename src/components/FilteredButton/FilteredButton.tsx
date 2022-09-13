@@ -1,6 +1,7 @@
 import React, {useCallback} from 'react';
 import Button from "@mui/material/Button";
-import {FilteredValuesType} from "../../App";
+import {FilteredValuesType} from "../../reducers/todolists-reducer";
+
 
 type FilteredButtonType = {
     todolistID: string

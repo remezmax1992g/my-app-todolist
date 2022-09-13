@@ -1,5 +1,5 @@
 import React, {useCallback} from 'react';
-import ToDoList, {TaskType} from "./ToDoList";
+import ToDoList from "./ToDoList";
 import './App.css';
 import AddItemForm from "./components/AddItemForm/AddItemForm";
 import {AppBar, Container, Grid, IconButton, Paper, Toolbar, Typography} from "@mui/material";
@@ -8,27 +8,18 @@ import Button from "@mui/material/Button";
 import {
     addTodolistAC,
     changeFilterTodolistAC,
-    editTodolistAC,
-    removeTodolistAC,
+    editTodolistAC, FilteredValuesType,
+    removeTodolistAC, TodolistEntityType,
 } from "./reducers/todolists-reducer";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootState} from "./redux/redux";
-//types
-export type FilteredValuesType = "all" | "active" | "completed";
-export type TasksType = {
-    [key: string]: Array<TaskType>
-}
-export type TodolistsType = {
-    //value
-    id: string,
-    title: string,
-    filter: FilteredValuesType
-}
+
+
 //Component
 function App() {
     //Store
     const dispatch = useDispatch()
-    const todolists = useSelector<AppRootState, Array<TodolistsType>>(state => state.todolists)
+    const todolists = useSelector<AppRootState, Array<TodolistEntityType>>(state => state.todolists)
     //function
     const changeFilter = useCallback((todolistID: string, filter: FilteredValuesType) => {
         dispatch(changeFilterTodolistAC(todolistID, filter))

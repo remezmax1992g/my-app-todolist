@@ -1,5 +1,4 @@
 import React, {useCallback} from 'react';
-import {FilteredValuesType} from "./App";
 import TasksItem from "./components/TasksItem/TasksItem";
 import AddItemForm from "./components/AddItemForm/AddItemForm";
 import EditableSpan from "./components/EditableSpan/EditableSpan";
@@ -9,13 +8,9 @@ import FilteredButton from "./components/FilteredButton/FilteredButton";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootState} from "./redux/redux";
 import {addTaskAC, changeStatusCheckboxAC, editTaskAC, removeTaskAC} from "./reducers/tasks-reducer";
+import {FilteredValuesType} from "./reducers/todolists-reducer";
+import {TaskStatus, TaskType} from "./api/tasks-api";
 //type
-export type TaskType = {
-    //value
-    id: string
-    title: string
-    isDone: boolean
-}
 type ToDoListPropsType = {
     //value
     todolistID: string
@@ -35,10 +30,10 @@ const ToDoList = React.memo(({todolistID,title,filter,changeFilter, removeTodoli
     let tasksAfterFiltering: Array<TaskType>
     switch (filter) {
         case "active":
-            tasksAfterFiltering = tasks.filter(t => !t.isDone)
+            tasksAfterFiltering = tasks.filter(t => t.status === TaskStatus.New)
             break
         case "completed":
-            tasksAfterFiltering = tasks.filter(t => t.isDone)
+            tasksAfterFiltering = tasks.filter(t => t.status === TaskStatus.Completed)
             break
         default:
             tasksAfterFiltering = tasks
@@ -53,7 +48,7 @@ const ToDoList = React.memo(({todolistID,title,filter,changeFilter, removeTodoli
         dispatch(addTaskAC(todolistID, newTitle))
     },[dispatch, todolistID])
     const removeTaskHandler = useCallback((taskID: string) => {dispatch(removeTaskAC(todolistID, taskID))}, [dispatch, todolistID])
-    const changeStatusCheckboxHandler = useCallback((taskID: string, isDone: boolean) => {dispatch(changeStatusCheckboxAC(todolistID, taskID, isDone))},[dispatch, todolistID])
+    const changeStatusCheckboxHandler = useCallback((taskID: string, status: TaskStatus) => {dispatch(changeStatusCheckboxAC(todolistID, taskID, status))},[dispatch, todolistID])
     const editTaskHandler = useCallback((taskID: string, newTitle: string) => {dispatch(editTaskAC(todolistID, taskID, newTitle))}, [dispatch, todolistID])
     //interface
     return (
