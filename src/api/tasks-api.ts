@@ -45,6 +45,14 @@ type ResponseTaskType<D = {}> = {
     messages: Array<string>
     resultCode: number
 }
+type UpdateTaskResponseModelType = {
+    title: string
+    description: string
+    status: TaskStatus
+    priority: TaskPriority
+    startDate: string
+    deadline: string
+}
 
 
 export const tasksAPI = {
@@ -57,7 +65,7 @@ export const tasksAPI = {
     deleteTask(todolistID: string, taskID: string) {
         return instance.delete<ResponseTaskType>(`todo-lists/${todolistID}/tasks/${taskID}`)
     },
-    updateTask(todolistID: string, taskID: string, updateTitle: string) {
-        return instance.put(`todo-lists/${todolistID}/tasks/${taskID}`, {title: updateTitle})
+    updateTask(todolistID: string, taskID: string, model: UpdateTaskResponseModelType) {
+        return instance.put(`todo-lists/${todolistID}/tasks/${taskID}`, model)
     }
 }

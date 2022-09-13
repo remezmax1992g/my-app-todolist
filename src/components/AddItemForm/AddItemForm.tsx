@@ -41,7 +41,6 @@ const AddItemForm = React.memo(({label, addItem}: AddItemFormTypeProps) => {
                        variant={"outlined"}
                        value={title}
                        label={label}
-                       onClick={onClickAddTask}
                        onChange={onChangeInputTitle}
                        onKeyDown={onKeyboardAddTask}
                        error={error}
