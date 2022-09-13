@@ -1,42 +1,41 @@
 import React, {useEffect, useState} from 'react'
-import {todolistsAPI} from "../api/todolists-api";
+import {tasksAPI} from "../api/tasks-api";
 
 export default {
-    title: 'todolistsAPI'
+    title: 'tasksAPI'
 }
 
-
-export const GetTodolists = () => {
+export const GetTasks = () => {
     const [state, setState] = useState<any>(null)
     useEffect(() => {
-       todolistsAPI.getTodolists()
-           .then(response => setState(response.data))
-    }, [])
-
-    return <div> {JSON.stringify(state)}</div>
-}
-export const CreateTodolist = () => {
-    const [state, setState] = useState<any>(null)
-    useEffect(() => {
-        todolistsAPI.createTodolist("Wish List")
+        tasksAPI.getTask("e4b89c85-0607-497d-839d-fcd36e5182da")
             .then(response => setState(response.data))
     }, [])
 
     return <div> {JSON.stringify(state)}</div>
 }
-export const DeleteTodolist = () => {
+export const CreateTask = () => {
     const [state, setState] = useState<any>(null)
     useEffect(() => {
-        todolistsAPI.deleteTodolist("aa87584a-659d-42af-bd16-edf1216281ab")
+        tasksAPI.createTask("e4b89c85-0607-497d-839d-fcd36e5182da", "New Task")
+            .then(response => setState(response.data))
+    }, [])
+
+    return <div> {JSON.stringify(state)}</div>
+}
+export const DeleteTask = () => {
+    const [state, setState] = useState<any>(null)
+    useEffect(() => {
+        tasksAPI.deleteTask("e4b89c85-0607-497d-839d-fcd36e5182da", "95aa7654-1e5d-4a12-8051-06c7e0782f8f")
             .then(response => setState(response))
     }, [])
 
     return <div> {JSON.stringify(state)}</div>
 }
-export const UpdateTodolistTitle = () => {
+export const UpdateTaskTitle = () => {
     const [state, setState] = useState<any>(null)
     useEffect(() => {
-        todolistsAPI.updateTodolist("20e6c714-faac-4835-81f5-26cb1227ee00","Refactoring")
+        tasksAPI.updateTask("e4b89c85-0607-497d-839d-fcd36e5182da","aeddf36a-f190-4f0e-81d5-cf549abf98f2", "Update Task")
             .then(response => setState(response.data))
     }, [])
 
