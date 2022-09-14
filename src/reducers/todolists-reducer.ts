@@ -93,3 +93,21 @@ export const fetchTodolistsTC = (): AppThunk => async dispatch => {
         throw new Error("Todolists weren't loaded")
     }
 }
+export const createTodolistTC = (newTitle: string): AppThunk => async dispatch => {
+    const res = await todolistsAPI.createTodolist(newTitle)
+    if (res.data.resultCode === 0) {
+        dispatch(addTodolistAC(newTitle))
+    }
+}
+export const deleteTodolistTC = (todolistID: string): AppThunk => async dispatch => {
+    const res = await todolistsAPI.deleteTodolist(todolistID)
+    if (res.data.resultCode === 0) {
+        dispatch(removeTodolistAC(todolistID))
+    }
+}
+export const updateTodolistTC = (todolistID: string, newTitle: string): AppThunk => async dispatch => {
+    const res = await todolistsAPI.updateTodolist(todolistID, newTitle)
+    if(res.data.resultCode === 0){
+        dispatch(editTodolistAC(todolistID, newTitle))
+    }
+}

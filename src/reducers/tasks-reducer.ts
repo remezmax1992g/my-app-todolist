@@ -5,7 +5,7 @@ import {
     REMOVE_TODOLIST,
     RemoveTodolistACType,
     SET_TODOLISTS,
-    SetTodolistsACType,
+    SetTodolistsACType
 } from "./todolists-reducer";
 import {TaskPriority, tasksAPI, TaskStatus, TaskType} from "../api/tasks-api";
 import {AppThunk} from "../redux/redux";
@@ -44,9 +44,9 @@ export const tasksReducer = (state: TasksType = initialStateForTasks, action: Ac
                 ...state,
                 [action.payload.todolistID]: state[action.payload.todolistID].filter(t => t.id !== action.payload.id)
             }
-            case REMOVE_TODOLIST:
-                const copyState = {...state}
-                delete copyState[action.payload.todolistID]
+        case REMOVE_TODOLIST:
+            const copyState = {...state}
+            delete copyState[action.payload.todolistID]
             return copyState
         case ADD_TASK:
             return {
@@ -57,7 +57,7 @@ export const tasksReducer = (state: TasksType = initialStateForTasks, action: Ac
                     description: "No information",
                     status: TaskStatus.New,
                     priority: TaskPriority.Low,
-                    startDate:"",
+                    startDate: "",
                     deadline: "",
                     todoListId: action.payload.todolistID,
                     order: 0
@@ -85,7 +85,9 @@ export const tasksReducer = (state: TasksType = initialStateForTasks, action: Ac
             }
         case SET_TODOLISTS:
             const newState = {...state}
-            action.payload.todolists.forEach(tl => {newState[tl.id]=[]})
+            action.payload.todolists.forEach(tl => {
+                newState[tl.id] = []
+            })
             return newState
         case SET_TASKS:
             return {...state, [action.payload.todolistID]: action.payload.tasks}
@@ -128,4 +130,30 @@ export const setTasksAC = (todolistID: string, tasks: Array<TaskType>) => {
 export const fetchTaskTC = (todolistID: string): AppThunk => async dispatch => {
     const res = await tasksAPI.getTask(todolistID)
     dispatch(setTasksAC(todolistID, res.data.items))
+}
+export const createTaskTC = (todolistID: string, newTitle: string): AppThunk => async dispatch => {
+    const res = await tasksAPI.createTask(todolistID, newTitle)
+    if (res.data.resultCode === 0) {
+        dispatch(addTaskAC(todolistID, newTitle))
+    }
+}
+export const deleteTaskTC = (todolistID: string, taskID: string): AppThunk => async dispatch => {
+    const res = await tasksAPI.deleteTask(todolistID, taskID)
+    if (res.data.resultCode === 0) {
+        dispatch(removeTaskAC(todolistID, taskID))
+    }
+
+}
+export const updateTaskTC = (todolistID: string, taskID: string, newTitle: string): AppThunk => async dispatch => {
+    const res = await tasksAPI.updateTask(todolistID, taskID, {
+        title: newTitle,
+        description: "No information",
+        status: TaskStatus.New,
+        priority: TaskPriority.Low,
+        startDate: "",
+        deadline: ""
+    })
+    if(res.data.resultCode === 0){
+        dispatch(editTaskAC(todolistID, taskID, newTitle))
+    }
 }
