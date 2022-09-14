@@ -5,7 +5,12 @@ import EditableSpan from "./components/EditableSpan/EditableSpan";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {IconButton} from "@mui/material";
 import FilteredButton from "./components/FilteredButton/FilteredButton";
-import {addTaskAC, changeStatusCheckboxAC, editTaskAC, fetchTaskTC, removeTaskAC} from "./reducers/tasks-reducer";
+import {
+    changeStatusTaskTC,
+    createTaskTC, deleteTaskTC,
+    fetchTaskTC,
+     updateTaskTC
+} from "./reducers/tasks-reducer";
 import {FilteredValuesType} from "./reducers/todolists-reducer";
 import {TaskStatus, TaskType} from "./api/tasks-api";
 import {useAppDispatch, useAppSelector} from "./redux/hook";
@@ -47,11 +52,11 @@ const ToDoList = React.memo(({todolistID,title,filter,changeFilter, removeTodoli
         editToDoList(todolistID, newTitle)
     },[editToDoList, todolistID])
     const addTaskHandler = useCallback((newTitle: string) => {
-        dispatch(addTaskAC(todolistID, newTitle))
+        dispatch(createTaskTC(todolistID, newTitle))
     },[dispatch, todolistID])
-    const removeTaskHandler = useCallback((taskID: string) => {dispatch(removeTaskAC(todolistID, taskID))}, [dispatch, todolistID])
-    const changeStatusCheckboxHandler = useCallback((taskID: string, status: TaskStatus) => {dispatch(changeStatusCheckboxAC(todolistID, taskID, status))},[dispatch, todolistID])
-    const editTaskHandler = useCallback((taskID: string, newTitle: string) => {dispatch(editTaskAC(todolistID, taskID, newTitle))}, [dispatch, todolistID])
+    const removeTaskHandler = useCallback((taskID: string) => {dispatch(deleteTaskTC(todolistID, taskID))}, [dispatch, todolistID])
+    const changeStatusCheckboxHandler = useCallback((taskID: string, status: TaskStatus) => {dispatch(changeStatusTaskTC(todolistID, taskID, status))},[dispatch, todolistID])
+    const editTaskHandler = useCallback((taskID: string, newTitle: string) => {dispatch(updateTaskTC(todolistID, taskID, newTitle))}, [dispatch, todolistID])
     //interface
     return (
         <span className={"Todolist"}>

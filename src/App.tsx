@@ -6,10 +6,10 @@ import {AppBar, Container, Grid, IconButton, Paper, Toolbar, Typography} from "@
 import {Menu} from "@mui/icons-material";
 import Button from "@mui/material/Button";
 import {
-    addTodolistAC,
-    changeFilterTodolistAC,
-    editTodolistAC, fetchTodolistsTC, FilteredValuesType,
-    removeTodolistAC
+
+    changeFilterTodolistAC, createTodolistTC, deleteTodolistTC,
+     fetchTodolistsTC, FilteredValuesType,
+    updateTodolistTC
 } from "./reducers/todolists-reducer";
 import {useAppDispatch, useAppSelector} from "./redux/hook";
 
@@ -23,17 +23,18 @@ function App() {
     useEffect(() => {
        dispatch(fetchTodolistsTC())
     }, [])
+
     const changeFilter = useCallback((todolistID: string, filter: FilteredValuesType) => {
         dispatch(changeFilterTodolistAC(todolistID, filter))
     }, [dispatch])
     const removeTodolist = useCallback((todolistID: string) => {
-        dispatch(removeTodolistAC(todolistID))
+        dispatch(deleteTodolistTC(todolistID))
     }, [dispatch]);
     const addToDoList = useCallback((newTitle: string) => {
-        dispatch(addTodolistAC(newTitle))
+        dispatch(createTodolistTC(newTitle))
     }, [dispatch]);
     const editToDoList = useCallback((todoListID: string, newTitle: string) => {
-        dispatch(editTodolistAC(todoListID, newTitle))
+        dispatch(updateTodolistTC(todoListID, newTitle))
     }, [dispatch]);
     //UI
     return (

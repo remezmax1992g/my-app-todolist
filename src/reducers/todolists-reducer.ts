@@ -34,13 +34,7 @@ export const todolistsReducer = (state: Array<TodolistEntityType> = initialState
         case REMOVE_TODOLIST:
             return state.filter(td => td.id !== action.payload.todolistID)
         case ADD_TODOLIST:
-            return [{
-                id: action.todolistID,
-                title: action.payload.newTitle,
-                filter: "all",
-                addedDate: "",
-                order: 0
-            }, ...state]
+            return [{...action.payload.todolist, filter: 'all'}, ...state]
         case EDIT_TODOLIST_TITLE:
             return state.map(td => td.id === action.payload.todolistID ? {...td, title: action.payload.newTitle} : td)
         case CHANGE_TODOLIST_FILTER:
@@ -59,11 +53,10 @@ export const removeTodolistAC = (todolistID: string) => {
         payload: {todolistID}
     } as const
 }
-export const addTodolistAC = (newTitle: string) => {
+export const addTodolistAC = (todolist: TodolistType) => {
     return {
         type: ADD_TODOLIST,
-        payload: {newTitle},
-        todolistID: v1()
+        payload: {todolist},
     } as const
 }
 export const editTodolistAC = (todolistID: string, newTitle: string) => {
@@ -96,7 +89,7 @@ export const fetchTodolistsTC = (): AppThunk => async dispatch => {
 export const createTodolistTC = (newTitle: string): AppThunk => async dispatch => {
     const res = await todolistsAPI.createTodolist(newTitle)
     if (res.data.resultCode === 0) {
-        dispatch(addTodolistAC(newTitle))
+        dispatch(addTodolistAC(res.data.data.item))
     }
 }
 export const deleteTodolistTC = (todolistID: string): AppThunk => async dispatch => {

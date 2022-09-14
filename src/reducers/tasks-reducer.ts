@@ -1,4 +1,3 @@
-import {v1} from "uuid";
 import {
     ADD_TODOLIST,
     AddTodolistACType,
@@ -7,8 +6,8 @@ import {
     SET_TODOLISTS,
     SetTodolistsACType
 } from "./todolists-reducer";
-import {TaskPriority, tasksAPI, TaskStatus, TaskType} from "../api/tasks-api";
-import {AppThunk} from "../redux/redux";
+import {tasksAPI, TaskStatus, TaskType} from "../api/tasks-api";
+import {AppRootState, AppThunk} from "../redux/redux";
 //types for Action
 type RemoveTaskACType = ReturnType<typeof removeTaskAC>
 type AddTaskACType = ReturnType<typeof addTaskAC>
@@ -51,21 +50,11 @@ export const tasksReducer = (state: TasksType = initialStateForTasks, action: Ac
         case ADD_TASK:
             return {
                 ...state,
-                [action.payload.todolistID]: [{
-                    id: v1(),
-                    title: action.payload.newTitle,
-                    description: "No information",
-                    status: TaskStatus.New,
-                    priority: TaskPriority.Low,
-                    startDate: "",
-                    deadline: "",
-                    todoListId: action.payload.todolistID,
-                    order: 0
-                }, ...state[action.payload.todolistID]]
+                [action.payload.task.todoListId]: [action.payload.task, ...state[action.payload.task.todoListId]]
             }
         case ADD_TODOLIST:
             return {
-                ...state, [action.todolistID]: []
+                ...state, [action.payload.todolist.id]: []
             }
         case CHANGE_STATUS_CHECKBOX:
             return {
@@ -102,10 +91,10 @@ export const removeTaskAC = (todolistID: string, id: string) => {
         payload: {todolistID, id}
     } as const
 }
-export const addTaskAC = (todolistID: string, newTitle: string) => {
+export const addTaskAC = (task: TaskType) => {
     return {
         type: ADD_TASK,
-        payload: {todolistID, newTitle}
+        payload: {task}
     } as const
 }
 export const changeStatusCheckboxAC = (todolistID: string, id: string, status: TaskStatus) => {
@@ -134,7 +123,7 @@ export const fetchTaskTC = (todolistID: string): AppThunk => async dispatch => {
 export const createTaskTC = (todolistID: string, newTitle: string): AppThunk => async dispatch => {
     const res = await tasksAPI.createTask(todolistID, newTitle)
     if (res.data.resultCode === 0) {
-        dispatch(addTaskAC(todolistID, newTitle))
+        dispatch(addTaskAC(res.data.data.item))
     }
 }
 export const deleteTaskTC = (todolistID: string, taskID: string): AppThunk => async dispatch => {
@@ -144,16 +133,37 @@ export const deleteTaskTC = (todolistID: string, taskID: string): AppThunk => as
     }
 
 }
-export const updateTaskTC = (todolistID: string, taskID: string, newTitle: string): AppThunk => async dispatch => {
+export const updateTaskTC = (todolistID: string, taskID: string, newTitle: string): AppThunk => async (dispatch, getState: () => AppRootState) => {
+    const findedTask = getState().tasks[todolistID].find(task => task.id === taskID)
+    if(!findedTask){
+        console.warn("Task wasn't found in the state")
+        return
+    }
     const res = await tasksAPI.updateTask(todolistID, taskID, {
         title: newTitle,
-        description: "No information",
-        status: TaskStatus.New,
-        priority: TaskPriority.Low,
-        startDate: "",
-        deadline: ""
+        description: findedTask.description,
+        status: findedTask.status,
+        priority: findedTask.priority,
+        startDate: findedTask.startDate,
+        deadline: findedTask.deadline
     })
     if(res.data.resultCode === 0){
         dispatch(editTaskAC(todolistID, taskID, newTitle))
+    }
+}
+export const changeStatusTaskTC = (todolistID: string, taskID: string, status: TaskStatus): AppThunk => async (dispatch, getState: () => AppRootState) => {
+    const findedTask = getState().tasks[todolistID].find(task => task.id === taskID)
+    if(!findedTask){
+        console.warn("Task wasn't found in the state")
+        return
+    }
+    const res = await tasksAPI.updateTask(todolistID, taskID, {title: findedTask.title,
+        description: findedTask.description,
+        status: status,
+        priority: findedTask.priority,
+        startDate: findedTask.startDate,
+        deadline: findedTask.deadline})
+    if(res.data.resultCode === 0){
+        dispatch(changeStatusCheckboxAC(todolistID, taskID, status))
     }
 }
