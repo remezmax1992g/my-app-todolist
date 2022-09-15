@@ -27,9 +27,9 @@ export const SET_TODOLISTS = "SET-TODOLISTS"
 //initialSate
 export let todolistID1 = v1();
 export let todolistID2 = v1();
-const initialStateForTodolists: Array<TodolistEntityType> = []
+const initialStateForTodolists: TodolistEntityType[] = []
 //reducer
-export const todolistsReducer = (state: Array<TodolistEntityType> = initialStateForTodolists, action: ActionTodolistType): Array<TodolistEntityType> => {
+export const todolistsReducer = (state: TodolistEntityType[] = initialStateForTodolists, action: ActionTodolistType): Array<TodolistEntityType> => {
     switch (action.type) {
         case REMOVE_TODOLIST:
             return state.filter(td => td.id !== action.payload.todolistID)
@@ -71,13 +71,13 @@ export const changeFilterTodolistAC = (todolistID: string, newFilter: FilteredVa
         payload: {todolistID, newFilter}
     } as const
 }
-export const setTodolistsAC = (todolists: Array<TodolistType>) => {
+export const setTodolistsAC = (todolists: TodolistType[]) => {
     return {
         type: SET_TODOLISTS,
         payload: {todolists}
     } as const
 }
-//Thunks
+//ThunkCreators
 export const fetchTodolistsTC = (): AppThunk => async dispatch => {
     try {
         const res = await todolistsAPI.getTodolists()

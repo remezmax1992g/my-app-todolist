@@ -25,7 +25,7 @@ export type ActionTaskType =
     | SetTasksACType
 //types for state
 export type TasksType = {
-    [key: string]: Array<TaskType>
+    [key: string]: TaskType[]
 }
 //constants
 export const REMOVE_TASK = "REMOVE-TASK"
@@ -84,7 +84,7 @@ export const tasksReducer = (state: TasksType = initialStateForTasks, action: Ac
             return state
     }
 }
-//ActionCreator
+//ActionCreators
 export const removeTaskAC = (todolistID: string, id: string) => {
     return {
         type: REMOVE_TASK,
@@ -109,13 +109,13 @@ export const editTaskAC = (todolistID: string, id: string, newTitle: string) => 
         payload: {todolistID, id, newTitle}
     } as const
 }
-export const setTasksAC = (todolistID: string, tasks: Array<TaskType>) => {
+export const setTasksAC = (todolistID: string, tasks: TaskType[]) => {
     return {
         type: SET_TASKS,
         payload: {todolistID, tasks}
     } as const
 }
-//Thunks
+//ThunkCreators
 export const fetchTaskTC = (todolistID: string): AppThunk => async dispatch => {
     const res = await tasksAPI.getTask(todolistID)
     dispatch(setTasksAC(todolistID, res.data.items))

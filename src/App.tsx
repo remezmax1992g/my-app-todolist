@@ -22,8 +22,7 @@ function App() {
     //function
     useEffect(() => {
        dispatch(fetchTodolistsTC())
-    }, [])
-
+    }, [dispatch])
     const changeFilter = useCallback((todolistID: string, filter: FilteredValuesType) => {
         dispatch(changeFilterTodolistAC(todolistID, filter))
     }, [dispatch])
