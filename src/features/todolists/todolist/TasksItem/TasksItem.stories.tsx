@@ -2,7 +2,7 @@ import {action} from "@storybook/addon-actions";
 import TasksItem from "./TasksItem";
 import {v1} from "uuid";
 import {ComponentMeta, ComponentStory} from "@storybook/react";
-import {TaskPriority, TaskStatus} from "../../api/tasks-api";
+import {TaskPriority, TaskStatus} from "../../../../api/tasks-api";
 
 export default {
     title: "TaskItem Component",

@@ -1,19 +1,19 @@
 import React, {useCallback, useEffect} from 'react';
-import TasksItem from "./components/TasksItem/TasksItem";
-import AddItemForm from "./components/AddItemForm/AddItemForm";
-import EditableSpan from "./components/EditableSpan/EditableSpan";
+import TasksItem from "./TasksItem/TasksItem";
+import AddItemForm from "../../../components/AddItemForm/AddItemForm";
+import EditableSpan from "../../../components/EditableSpan/EditableSpan";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {IconButton} from "@mui/material";
-import FilteredButton from "./components/FilteredButton/FilteredButton";
+import FilteredButton from "./FilteredButton/FilteredButton";
 import {
     changeStatusTaskTC,
     createTaskTC, deleteTaskTC,
     fetchTaskTC,
      updateTaskTC
-} from "./reducers/tasks-reducer";
-import {FilteredValuesType} from "./reducers/todolists-reducer";
-import {TaskStatus, TaskType} from "./api/tasks-api";
-import {useAppDispatch, useAppSelector} from "./redux/hook";
+} from "../../../reducers/tasks-reducer";
+import {FilteredValuesType} from "../../../reducers/todolists-reducer";
+import {TaskStatus, TaskType} from "../../../api/tasks-api";
+import {useAppDispatch, useAppSelector} from "../../../redux/hook";
 //type
 type ToDoListPropsType = {
     //value

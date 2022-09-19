@@ -1,23 +1,7 @@
 import {v1} from "uuid";
 import {todolistsAPI, TodolistType} from "../api/todolists-api";
 import {AppThunk} from "../redux/redux";
-//types for Action
-export type RemoveTodolistACType = ReturnType<typeof removeTodolistAC>
-export type AddTodolistACType = ReturnType<typeof addTodolistAC>
-type EditTodolistACType = ReturnType<typeof editTodolistAC>
-type ChangeTodolistFilterACType = ReturnType<typeof changeFilterTodolistAC>
-export type SetTodolistsACType = ReturnType<typeof setTodolistsAC>
-export type ActionTodolistType = RemoveTodolistACType
-    | AddTodolistACType
-    | EditTodolistACType
-    | ChangeTodolistFilterACType
-    | SetTodolistsACType
-//types for state
-export type TodolistEntityType = TodolistType & {
-    //value
-    filter: FilteredValuesType
-}
-export type FilteredValuesType = "all" | "active" | "completed";
+
 //constants
 export const REMOVE_TODOLIST = "REMOVE-TODOLIST"
 export const ADD_TODOLIST = "ADD-TODOLIST"
@@ -47,36 +31,11 @@ export const todolistsReducer = (state: TodolistEntityType[] = initialStateForTo
     }
 }
 //ActionCreators
-export const removeTodolistAC = (todolistID: string) => {
-    return {
-        type: REMOVE_TODOLIST,
-        payload: {todolistID}
-    } as const
-}
-export const addTodolistAC = (todolist: TodolistType) => {
-    return {
-        type: ADD_TODOLIST,
-        payload: {todolist},
-    } as const
-}
-export const editTodolistAC = (todolistID: string, newTitle: string) => {
-    return {
-        type: EDIT_TODOLIST_TITLE,
-        payload: {todolistID, newTitle}
-    } as const
-}
-export const changeFilterTodolistAC = (todolistID: string, newFilter: FilteredValuesType) => {
-    return {
-        type: CHANGE_TODOLIST_FILTER,
-        payload: {todolistID, newFilter}
-    } as const
-}
-export const setTodolistsAC = (todolists: TodolistType[]) => {
-    return {
-        type: SET_TODOLISTS,
-        payload: {todolists}
-    } as const
-}
+export const removeTodolistAC = (todolistID: string) => ({type: REMOVE_TODOLIST, payload: {todolistID}}as const)
+export const addTodolistAC = (todolist: TodolistType) => ({type: ADD_TODOLIST, payload: {todolist}}as const)
+export const editTodolistAC = (todolistID: string, newTitle: string) => ({type: EDIT_TODOLIST_TITLE, payload: {todolistID, newTitle}}as const)
+export const changeFilterTodolistAC = (todolistID: string, newFilter: FilteredValuesType) => ({type: CHANGE_TODOLIST_FILTER, payload: {todolistID, newFilter}}as const)
+export const setTodolistsAC = (todolists: TodolistType[]) => ({type: SET_TODOLISTS, payload: {todolists}}as const)
 //ThunkCreators
 export const fetchTodolistsTC = (): AppThunk => async dispatch => {
     try {
@@ -104,3 +63,19 @@ export const updateTodolistTC = (todolistID: string, newTitle: string): AppThunk
         dispatch(editTodolistAC(todolistID, newTitle))
     }
 }
+//type for Action
+export type AddTodolistACType = ReturnType<typeof addTodolistAC>
+export type RemoveTodolistACType = ReturnType<typeof removeTodolistAC>
+export type SetTodolistsACType = ReturnType<typeof setTodolistsAC>
+export type ActionTodolistType =
+    | RemoveTodolistACType
+    | AddTodolistACType
+    | ReturnType<typeof editTodolistAC>
+    | ReturnType<typeof changeFilterTodolistAC>
+    | SetTodolistsACType
+//types for state
+export type TodolistEntityType = TodolistType & {
+    //value
+    filter: FilteredValuesType
+}
+export type FilteredValuesType = "all" | "active" | "completed";

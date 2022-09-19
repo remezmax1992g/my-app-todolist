@@ -1,6 +1,6 @@
 import React from 'react';
 import Task from "./Task/Task";
-import {TaskStatus, TaskType} from "../../api/tasks-api";
+import {TaskStatus, TaskType} from "../../../../api/tasks-api";
 
 type TaskItemTypeProps = {
     //value
