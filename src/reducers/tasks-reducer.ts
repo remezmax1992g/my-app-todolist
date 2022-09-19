@@ -8,6 +8,7 @@ import {
 } from "./todolists-reducer";
 import {tasksAPI, TaskStatus, TaskType} from "../api/tasks-api";
 import {AppRootState, AppThunk} from "../redux/redux";
+import {setError} from "./app-reducer";
 //constants
 export const REMOVE_TASK = "REMOVE-TASK"
 export const ADD_TASK = "ADD-TASK"
@@ -78,13 +79,23 @@ export const setTasksAC = (todolistID: string, tasks: TaskType[]) =>
 export const fetchTaskTC = (todolistID: string): AppThunk => async dispatch => {
     const res = await tasksAPI.getTask(todolistID)
     dispatch(setTasksAC(todolistID, res.data.items))
+
 }
 export const createTaskTC = (todolistID: string, newTitle: string): AppThunk => async dispatch => {
     const res = await tasksAPI.createTask(todolistID, newTitle)
     if (res.data.resultCode === 0) {
         dispatch(addTaskAC(res.data.data.item))
     }
+    else{
+        if(res.data.messages.length){
+            dispatch(setError(res.data.messages[0]))
+        }
+        else{
+            dispatch(setError("Undefined error"))
+        }
+    }
 }
+
 export const deleteTaskTC = (todolistID: string, taskID: string): AppThunk => async dispatch => {
     const res = await tasksAPI.deleteTask(todolistID, taskID)
     if (res.data.resultCode === 0) {

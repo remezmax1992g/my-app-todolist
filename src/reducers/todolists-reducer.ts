@@ -31,11 +31,17 @@ export const todolistsReducer = (state: TodolistEntityType[] = initialStateForTo
     }
 }
 //ActionCreators
-export const removeTodolistAC = (todolistID: string) => ({type: REMOVE_TODOLIST, payload: {todolistID}}as const)
-export const addTodolistAC = (todolist: TodolistType) => ({type: ADD_TODOLIST, payload: {todolist}}as const)
-export const editTodolistAC = (todolistID: string, newTitle: string) => ({type: EDIT_TODOLIST_TITLE, payload: {todolistID, newTitle}}as const)
-export const changeFilterTodolistAC = (todolistID: string, newFilter: FilteredValuesType) => ({type: CHANGE_TODOLIST_FILTER, payload: {todolistID, newFilter}}as const)
-export const setTodolistsAC = (todolists: TodolistType[]) => ({type: SET_TODOLISTS, payload: {todolists}}as const)
+export const removeTodolistAC = (todolistID: string) => ({type: REMOVE_TODOLIST, payload: {todolistID}} as const)
+export const addTodolistAC = (todolist: TodolistType) => ({type: ADD_TODOLIST, payload: {todolist}} as const)
+export const editTodolistAC = (todolistID: string, newTitle: string) => ({
+    type: EDIT_TODOLIST_TITLE,
+    payload: {todolistID, newTitle}
+} as const)
+export const changeFilterTodolistAC = (todolistID: string, newFilter: FilteredValuesType) => ({
+    type: CHANGE_TODOLIST_FILTER,
+    payload: {todolistID, newFilter}
+} as const)
+export const setTodolistsAC = (todolists: TodolistType[]) => ({type: SET_TODOLISTS, payload: {todolists}} as const)
 //ThunkCreators
 export const fetchTodolistsTC = (): AppThunk => async dispatch => {
     try {
@@ -59,7 +65,7 @@ export const deleteTodolistTC = (todolistID: string): AppThunk => async dispatch
 }
 export const updateTodolistTC = (todolistID: string, newTitle: string): AppThunk => async dispatch => {
     const res = await todolistsAPI.updateTodolist(todolistID, newTitle)
-    if(res.data.resultCode === 0){
+    if (res.data.resultCode === 0) {
         dispatch(editTodolistAC(todolistID, newTitle))
     }
 }
