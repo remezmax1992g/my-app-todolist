@@ -1,6 +1,7 @@
 import {v1} from "uuid";
 import {todolistsAPI, TodolistType} from "../api/todolists-api";
 import {AppThunk} from "../redux/redux";
+import {setStatus} from "./app-reducer";
 
 //constants
 export const REMOVE_TODOLIST = "REMOVE-TODOLIST"
@@ -45,28 +46,45 @@ export const setTodolistsAC = (todolists: TodolistType[]) => ({type: SET_TODOLIS
 //ThunkCreators
 export const fetchTodolistsTC = (): AppThunk => async dispatch => {
     try {
+        dispatch(setStatus("loading"))
         const res = await todolistsAPI.getTodolists()
         dispatch(setTodolistsAC(res.data))
+        dispatch(setStatus("succeeded"))
     } catch (e) {
-        throw new Error("Todolists weren't loaded")
+        dispatch(setStatus("failed"))
     }
 }
 export const createTodolistTC = (newTitle: string): AppThunk => async dispatch => {
+    dispatch(setStatus("loading"))
     const res = await todolistsAPI.createTodolist(newTitle)
     if (res.data.resultCode === 0) {
         dispatch(addTodolistAC(res.data.data.item))
+        dispatch(setStatus("succeeded"))
+    }
+    else{
+        dispatch(setStatus("failed"))
     }
 }
 export const deleteTodolistTC = (todolistID: string): AppThunk => async dispatch => {
+    dispatch(setStatus("loading"))
     const res = await todolistsAPI.deleteTodolist(todolistID)
     if (res.data.resultCode === 0) {
         dispatch(removeTodolistAC(todolistID))
+        dispatch(setStatus("succeeded"))
+    }
+    else{
+        dispatch(setStatus("failed"))
     }
 }
 export const updateTodolistTC = (todolistID: string, newTitle: string): AppThunk => async dispatch => {
+    dispatch(setStatus("loading"))
     const res = await todolistsAPI.updateTodolist(todolistID, newTitle)
     if (res.data.resultCode === 0) {
         dispatch(editTodolistAC(todolistID, newTitle))
+        dispatch(setStatus("succeeded"))
+    }
+    else{
+        dispatch(setStatus("failed"))
     }
 }
 //type for Action

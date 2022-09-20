@@ -45,7 +45,7 @@ const ToDoList = React.memo(({todolistID,title,filter,changeFilter, removeTodoli
     //function
     useEffect(() => {
         dispatch(fetchTaskTC(todolistID))
-    })
+    },[])
     const removeTodolistHandler = useCallback(() => {
        removeTodolist(todolistID)},[removeTodolist, todolistID])
     const editToDoListHandler = useCallback((newTitle: string) => {

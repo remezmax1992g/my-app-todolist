@@ -8,7 +8,7 @@ import {
 } from "./todolists-reducer";
 import {tasksAPI, TaskStatus, TaskType} from "../api/tasks-api";
 import {AppRootState, AppThunk} from "../redux/redux";
-import {setError} from "./app-reducer";
+import {setError, setStatus} from "./app-reducer";
 //constants
 export const REMOVE_TASK = "REMOVE-TASK"
 export const ADD_TASK = "ADD-TASK"
@@ -77,14 +77,17 @@ export const setTasksAC = (todolistID: string, tasks: TaskType[]) =>
     ({type: SET_TASKS, payload: {todolistID, tasks}}as const)
 //ThunkCreators
 export const fetchTaskTC = (todolistID: string): AppThunk => async dispatch => {
+    dispatch(setStatus("loading"))
     const res = await tasksAPI.getTask(todolistID)
     dispatch(setTasksAC(todolistID, res.data.items))
-
+    dispatch(setStatus("succeeded"))
 }
 export const createTaskTC = (todolistID: string, newTitle: string): AppThunk => async dispatch => {
+    dispatch(setStatus("loading"))
     const res = await tasksAPI.createTask(todolistID, newTitle)
     if (res.data.resultCode === 0) {
         dispatch(addTaskAC(res.data.data.item))
+        dispatch(setStatus("succeeded"))
     }
     else{
         if(res.data.messages.length){
@@ -93,20 +96,27 @@ export const createTaskTC = (todolistID: string, newTitle: string): AppThunk => 
         else{
             dispatch(setError("Undefined error"))
         }
+        dispatch(setStatus("failed"))
     }
 }
-
 export const deleteTaskTC = (todolistID: string, taskID: string): AppThunk => async dispatch => {
+    dispatch(setStatus("loading"))
     const res = await tasksAPI.deleteTask(todolistID, taskID)
     if (res.data.resultCode === 0) {
         dispatch(removeTaskAC(todolistID, taskID))
+        dispatch(setStatus("succeeded"))
+    }
+    else{
+        dispatch(setStatus("failed"))
     }
 
 }
 export const updateTaskTC = (todolistID: string, taskID: string, newTitle: string): AppThunk => async (dispatch, getState: () => AppRootState) => {
+    dispatch(setStatus("loading"))
     const findedTask = getState().tasks[todolistID].find(task => task.id === taskID)
     if(!findedTask){
         console.warn("Task wasn't found in the state")
+        dispatch(setStatus("failed"))
         return
     }
     const res = await tasksAPI.updateTask(todolistID, taskID, {
@@ -119,12 +129,18 @@ export const updateTaskTC = (todolistID: string, taskID: string, newTitle: strin
     })
     if(res.data.resultCode === 0){
         dispatch(editTaskAC(todolistID, taskID, newTitle))
+        dispatch(setStatus("succeeded"))
+    }
+    else{
+        dispatch(setStatus("failed"))
     }
 }
 export const changeStatusTaskTC = (todolistID: string, taskID: string, status: TaskStatus): AppThunk => async (dispatch, getState: () => AppRootState) => {
+    dispatch(setStatus("loading"))
     const findedTask = getState().tasks[todolistID].find(task => task.id === taskID)
     if(!findedTask){
         console.warn("Task wasn't found in the state")
+        dispatch(setStatus("failed"))
         return
     }
     const res = await tasksAPI.updateTask(todolistID, taskID, {title: findedTask.title,
@@ -135,6 +151,10 @@ export const changeStatusTaskTC = (todolistID: string, taskID: string, status: T
         deadline: findedTask.deadline})
     if(res.data.resultCode === 0){
         dispatch(changeStatusCheckboxAC(todolistID, taskID, status))
+        dispatch(setStatus("succeeded"))
+    }
+    else{
+        dispatch(setStatus("failed"))
     }
 }
 //type for Action
