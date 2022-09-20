@@ -1,13 +1,14 @@
 import {v1} from "uuid";
 import {todolistsAPI, TodolistType} from "../api/todolists-api";
 import {AppThunk} from "../redux/redux";
-import {setStatus} from "./app-reducer";
+import {RequestStatusType, setStatus} from "./app-reducer";
 
 //constants
 export const REMOVE_TODOLIST = "REMOVE-TODOLIST"
 export const ADD_TODOLIST = "ADD-TODOLIST"
 export const EDIT_TODOLIST_TITLE = "EDIT-TODOLIST-TITLE"
 export const CHANGE_TODOLIST_FILTER = "CHANGE-TODOLIST-FILTER"
+export const CHANGE_TODOLIST_STATUS = "CHANGE-TODOLIST-STATUS"
 export const SET_TODOLISTS = "SET-TODOLISTS"
 //initialSate
 export let todolistID1 = v1();
@@ -19,13 +20,15 @@ export const todolistsReducer = (state: TodolistEntityType[] = initialStateForTo
         case REMOVE_TODOLIST:
             return state.filter(td => td.id !== action.payload.todolistID)
         case ADD_TODOLIST:
-            return [{...action.payload.todolist, filter: 'all'}, ...state]
+            return [{...action.payload.todolist, filter: 'all', status: "idle"}, ...state]
         case EDIT_TODOLIST_TITLE:
             return state.map(td => td.id === action.payload.todolistID ? {...td, title: action.payload.newTitle} : td)
         case CHANGE_TODOLIST_FILTER:
             return state.map(td => td.id === action.payload.todolistID ? {...td, filter: action.payload.newFilter} : td)
+        case CHANGE_TODOLIST_STATUS:
+            return state.map(td => td.id === action.payload.todolistID ? {...td, status: action.payload.status} : td)
         case SET_TODOLISTS:
-            return action.payload.todolists.map(tl => ({...tl, filter: "all"}))
+            return action.payload.todolists.map(tl => ({...tl, filter: "all", status: "idle"}))
         default:
             return state
 
@@ -41,6 +44,10 @@ export const editTodolistAC = (todolistID: string, newTitle: string) => ({
 export const changeFilterTodolistAC = (todolistID: string, newFilter: FilteredValuesType) => ({
     type: CHANGE_TODOLIST_FILTER,
     payload: {todolistID, newFilter}
+} as const)
+export const changeStatusTodolistAC = (todolistID: string, status: RequestStatusType) => ({
+    type: CHANGE_TODOLIST_STATUS,
+    payload: {todolistID, status}
 } as const)
 export const setTodolistsAC = (todolists: TodolistType[]) => ({type: SET_TODOLISTS, payload: {todolists}} as const)
 //ThunkCreators
@@ -67,6 +74,7 @@ export const createTodolistTC = (newTitle: string): AppThunk => async dispatch =
 }
 export const deleteTodolistTC = (todolistID: string): AppThunk => async dispatch => {
     dispatch(setStatus("loading"))
+    dispatch(changeStatusTodolistAC(todolistID, "loading"))
     const res = await todolistsAPI.deleteTodolist(todolistID)
     if (res.data.resultCode === 0) {
         dispatch(removeTodolistAC(todolistID))
@@ -78,6 +86,7 @@ export const deleteTodolistTC = (todolistID: string): AppThunk => async dispatch
 }
 export const updateTodolistTC = (todolistID: string, newTitle: string): AppThunk => async dispatch => {
     dispatch(setStatus("loading"))
+    dispatch(changeStatusTodolistAC(todolistID, "loading"))
     const res = await todolistsAPI.updateTodolist(todolistID, newTitle)
     if (res.data.resultCode === 0) {
         dispatch(editTodolistAC(todolistID, newTitle))
@@ -86,6 +95,7 @@ export const updateTodolistTC = (todolistID: string, newTitle: string): AppThunk
     else{
         dispatch(setStatus("failed"))
     }
+    dispatch(changeStatusTodolistAC(todolistID, "idle"))
 }
 //type for Action
 export type AddTodolistACType = ReturnType<typeof addTodolistAC>
@@ -97,9 +107,11 @@ export type ActionTodolistType =
     | ReturnType<typeof editTodolistAC>
     | ReturnType<typeof changeFilterTodolistAC>
     | SetTodolistsACType
+    | ReturnType<typeof changeStatusTodolistAC>
 //types for state
 export type TodolistEntityType = TodolistType & {
     //value
     filter: FilteredValuesType
+    status: RequestStatusType
 }
 export type FilteredValuesType = "all" | "active" | "completed";

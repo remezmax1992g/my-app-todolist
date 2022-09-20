@@ -5,11 +5,12 @@ import {AddCircle} from "@mui/icons-material";
 type AddItemFormTypeProps = {
     //value
     label: string
+    disabled?: boolean
     //function
     addItem: (titleInput: string) => void
 }
 
-const AddItemForm = React.memo(({label, addItem}: AddItemFormTypeProps) => {
+const AddItemForm = React.memo(({label, disabled = false, addItem}: AddItemFormTypeProps) => {
     //reducers
     const [title, setTitle] = useState<string>("")
     const [error, setError] = useState<boolean>(false)
@@ -45,8 +46,11 @@ const AddItemForm = React.memo(({label, addItem}: AddItemFormTypeProps) => {
                        onKeyDown={onKeyboardAddTask}
                        error={error}
                        helperText={error && "Title is required!"}
+                       disabled={disabled}
                        />
-            <IconButton onClick={onClickAddTask} color={"primary"}>
+            <IconButton onClick={onClickAddTask}
+                        color={"primary"}
+                        disabled={disabled}>
                 <AddCircle/>
             </IconButton>
         </div>

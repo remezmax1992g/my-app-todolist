@@ -59,13 +59,16 @@ const ToDoList = React.memo(({todolist,changeFilter, removeTodolist,editToDoList
     return (
         <span className={"Todolist"}>
             <h2>
-                <EditableSpan title={todolist.title} onChangeTitle={editToDoListHandler}/>
-                 <IconButton onClick={removeTodolistHandler}>
+                <EditableSpan title={todolist.title}
+                              onChangeTitle={editToDoListHandler}
+                              disabled={todolist.status === "loading"}/>
+                 <IconButton onClick={removeTodolistHandler}
+                             disabled={todolist.status === "loading"}>
                     <DeleteIcon/>
                  </IconButton>
             </h2>
             <span>
-                <AddItemForm addItem={addTaskHandler} label={"Type task"}/>
+                <AddItemForm addItem={addTaskHandler} label={"Type task"} disabled={todolist.status === "loading"}/>
                 <TasksItem tasks={tasksAfterFiltering}
                            removeTask={removeTaskHandler}
                            changeStatusCheckBox={changeStatusCheckboxHandler}

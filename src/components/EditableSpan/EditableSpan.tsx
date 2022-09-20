@@ -6,11 +6,12 @@ type EditablePropsType = {
     //value
     title: string
     status?: TaskStatus
+    disabled?: boolean
     //function
     onChangeTitle: (newTitle: string) => void
 }
 
-export const EditableSpan = React.memo(({title, status, onChangeTitle}: EditablePropsType) => {
+export const EditableSpan = React.memo(({title, status, disabled = false, onChangeTitle}: EditablePropsType) => {
     //state
     const [editMode, setEditMode] = useState<boolean>(false)
     let [newTitle, setNewTitle] = useState<string>("")
@@ -33,7 +34,12 @@ export const EditableSpan = React.memo(({title, status, onChangeTitle}: Editable
     return (
         editMode
             ?
-            <TextField value={newTitle} variant={"standard"} onChange={onChangeHandler} onBlur={addNewTitle} autoFocus/>
+            <TextField value={newTitle}
+                       variant={"standard"}
+                       onChange={onChangeHandler}
+                       onBlur={addNewTitle}
+                       autoFocus
+                       disabled={disabled}/>
             : <span onDoubleClick={editHandler}>{title}</span>
     );
 });
