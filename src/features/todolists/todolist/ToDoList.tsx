@@ -11,28 +11,26 @@ import {
     fetchTaskTC,
      updateTaskTC
 } from "../../../reducers/tasks-reducer";
-import {FilteredValuesType} from "../../../reducers/todolists-reducer";
+import {FilteredValuesType, TodolistEntityType} from "../../../reducers/todolists-reducer";
 import {TaskStatus, TaskType} from "../../../api/tasks-api";
 import {useAppDispatch, useAppSelector} from "../../../redux/hook";
 //type
 type ToDoListPropsType = {
     //value
-    todolistID: string
-    title: string
-    filter: FilteredValuesType
+    todolist: TodolistEntityType
     //function
     changeFilter: (todolistID: string, filter: FilteredValuesType) => void
     removeTodolist: (todolistID: string) => void
     editToDoList: (todolistID: string, newTitle: string) => void
 }
 //Component
-const ToDoList = React.memo(({todolistID,title,filter,changeFilter, removeTodolist,editToDoList}: ToDoListPropsType) => {
+const ToDoList = React.memo(({todolist,changeFilter, removeTodolist,editToDoList}: ToDoListPropsType) => {
     //store
     const dispatch = useAppDispatch()
-    const tasks = useAppSelector(state => state.tasks[todolistID])
+    const tasks = useAppSelector(state => state.tasks[todolist.id])
     //filtering
     let tasksAfterFiltering: Array<TaskType>
-    switch (filter) {
+    switch (todolist.filter) {
         case "active":
             tasksAfterFiltering = tasks.filter(t => t.status === TaskStatus.New)
             break
@@ -44,24 +42,24 @@ const ToDoList = React.memo(({todolistID,title,filter,changeFilter, removeTodoli
     }
     //function
     useEffect(() => {
-        dispatch(fetchTaskTC(todolistID))
+        dispatch(fetchTaskTC(todolist.id))
     },[])
     const removeTodolistHandler = useCallback(() => {
-       removeTodolist(todolistID)},[removeTodolist, todolistID])
+       removeTodolist(todolist.id)},[removeTodolist, todolist.id])
     const editToDoListHandler = useCallback((newTitle: string) => {
-        editToDoList(todolistID, newTitle)
-    },[editToDoList, todolistID])
+        editToDoList(todolist.id, newTitle)
+    },[editToDoList, todolist.id])
     const addTaskHandler = useCallback((newTitle: string) => {
-        dispatch(createTaskTC(todolistID, newTitle))
-    },[dispatch, todolistID])
-    const removeTaskHandler = useCallback((taskID: string) => {dispatch(deleteTaskTC(todolistID, taskID))}, [dispatch, todolistID])
-    const changeStatusCheckboxHandler = useCallback((taskID: string, status: TaskStatus) => {dispatch(changeStatusTaskTC(todolistID, taskID, status))},[dispatch, todolistID])
-    const editTaskHandler = useCallback((taskID: string, newTitle: string) => {dispatch(updateTaskTC(todolistID, taskID, newTitle))}, [dispatch, todolistID])
+        dispatch(createTaskTC(todolist.id, newTitle))
+    },[dispatch, todolist.id])
+    const removeTaskHandler = useCallback((taskID: string) => {dispatch(deleteTaskTC(todolist.id, taskID))}, [dispatch, todolist.id])
+    const changeStatusCheckboxHandler = useCallback((taskID: string, status: TaskStatus) => {dispatch(changeStatusTaskTC(todolist.id, taskID, status))},[dispatch, todolist.id])
+    const editTaskHandler = useCallback((taskID: string, newTitle: string) => {dispatch(updateTaskTC(todolist.id, taskID, newTitle))}, [dispatch, todolist.id])
     //interface
     return (
         <span className={"Todolist"}>
             <h2>
-                <EditableSpan title={title} onChangeTitle={editToDoListHandler}/>
+                <EditableSpan title={todolist.title} onChangeTitle={editToDoListHandler}/>
                  <IconButton onClick={removeTodolistHandler}>
                     <DeleteIcon/>
                  </IconButton>
@@ -72,7 +70,7 @@ const ToDoList = React.memo(({todolistID,title,filter,changeFilter, removeTodoli
                            removeTask={removeTaskHandler}
                            changeStatusCheckBox={changeStatusCheckboxHandler}
                            editTask={editTaskHandler}/>
-                <FilteredButton todolistID={todolistID} filter={filter} changeFilter={changeFilter}/>
+                <FilteredButton todolistID={todolist.id} filter={todolist.filter} changeFilter={changeFilter}/>
             </span>
         </span>
     );

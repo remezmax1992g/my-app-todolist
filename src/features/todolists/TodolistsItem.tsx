@@ -39,9 +39,7 @@ const TodolistsItem = () => {
                         <Paper style={{padding: "10px"}}>
                             <ToDoList
                                 key={tl.id}
-                                todolistID={tl.id}
-                                title={tl.title}
-                                filter={tl.filter}
+                                todolist={tl}
                                 changeFilter={changeFilter}
                                 removeTodolist={removeTodolist}
                                 editToDoList={editToDoList}
