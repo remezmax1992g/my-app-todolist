@@ -8,7 +8,8 @@ import {
 } from "./todolists-reducer";
 import {tasksAPI, TaskStatus, TaskType} from "../api/tasks-api";
 import {AppRootState, AppThunk} from "../redux/redux";
-import {setError, setStatus} from "./app-reducer";
+import {setStatus} from "./app-reducer";
+import {handleServerAppError, handleServerNetworkError} from "../utilits/error-utilits";
 //constants
 export const REMOVE_TASK = "REMOVE-TASK"
 export const ADD_TASK = "ADD-TASK"
@@ -66,95 +67,111 @@ export const tasksReducer = (state: TasksType = initialStateForTasks, action: Ac
 }
 //ActionCreators
 export const removeTaskAC = (todolistID: string, id: string) =>
-    ({type: REMOVE_TASK, payload: {todolistID, id}}as const)
+    ({type: REMOVE_TASK, payload: {todolistID, id}} as const)
 export const addTaskAC = (task: TaskType) =>
-    ({type: ADD_TASK, payload: {task}}as const)
+    ({type: ADD_TASK, payload: {task}} as const)
 export const changeStatusCheckboxAC = (todolistID: string, id: string, status: TaskStatus) =>
-    ({type: CHANGE_STATUS_CHECKBOX, payload: {todolistID, id, status}}as const)
+    ({type: CHANGE_STATUS_CHECKBOX, payload: {todolistID, id, status}} as const)
 export const editTaskAC = (todolistID: string, id: string, newTitle: string) =>
-    ({type: EDIT_TASK, payload: {todolistID, id, newTitle}}as const)
+    ({type: EDIT_TASK, payload: {todolistID, id, newTitle}} as const)
 export const setTasksAC = (todolistID: string, tasks: TaskType[]) =>
-    ({type: SET_TASKS, payload: {todolistID, tasks}}as const)
+    ({type: SET_TASKS, payload: {todolistID, tasks}} as const)
 //ThunkCreators
 export const fetchTaskTC = (todolistID: string): AppThunk => async dispatch => {
-    dispatch(setStatus("loading"))
-    const res = await tasksAPI.getTask(todolistID)
-    dispatch(setTasksAC(todolistID, res.data.items))
-    dispatch(setStatus("succeeded"))
+    try {
+        dispatch(setStatus("loading"))
+        const res = await tasksAPI.getTask(todolistID)
+        dispatch(setTasksAC(todolistID, res.data.items))
+        dispatch(setStatus("succeeded"))
+    } catch (error: any) {
+        handleServerNetworkError(error, dispatch)
+    }
 }
 export const createTaskTC = (todolistID: string, newTitle: string): AppThunk => async dispatch => {
-    dispatch(setStatus("loading"))
-    const res = await tasksAPI.createTask(todolistID, newTitle)
-    if (res.data.resultCode === 0) {
-        dispatch(addTaskAC(res.data.data.item))
-        dispatch(setStatus("succeeded"))
-    }
-    else{
-        if(res.data.messages.length){
-            dispatch(setError(res.data.messages[0]))
+    try {
+        dispatch(setStatus("loading"))
+        const res = await tasksAPI.createTask(todolistID, newTitle)
+        if (res.data.resultCode === 0) {
+            dispatch(addTaskAC(res.data.data.item))
+            dispatch(setStatus("succeeded"))
+        } else {
+            handleServerAppError(res.data, dispatch)
         }
-        else{
-            dispatch(setError("Undefined error"))
-        }
-        dispatch(setStatus("failed"))
+    } catch
+        (error: any) {
+        handleServerNetworkError(error, dispatch)
     }
 }
 export const deleteTaskTC = (todolistID: string, taskID: string): AppThunk => async dispatch => {
-    dispatch(setStatus("loading"))
-    const res = await tasksAPI.deleteTask(todolistID, taskID)
-    if (res.data.resultCode === 0) {
-        dispatch(removeTaskAC(todolistID, taskID))
-        dispatch(setStatus("succeeded"))
-    }
-    else{
-        dispatch(setStatus("failed"))
+    try {
+        dispatch(setStatus("loading"))
+        const res = await tasksAPI.deleteTask(todolistID, taskID)
+        if (res.data.resultCode === 0) {
+            dispatch(removeTaskAC(todolistID, taskID))
+            dispatch(setStatus("succeeded"))
+        } else {
+            handleServerAppError(res.data, dispatch)
+        }
+    } catch
+        (error: any) {
+        handleServerNetworkError(error, dispatch)
     }
 
 }
 export const updateTaskTC = (todolistID: string, taskID: string, newTitle: string): AppThunk => async (dispatch, getState: () => AppRootState) => {
-    dispatch(setStatus("loading"))
-    const findedTask = getState().tasks[todolistID].find(task => task.id === taskID)
-    if(!findedTask){
-        console.warn("Task wasn't found in the state")
-        dispatch(setStatus("failed"))
-        return
-    }
-    const res = await tasksAPI.updateTask(todolistID, taskID, {
-        title: newTitle,
-        description: findedTask.description,
-        status: findedTask.status,
-        priority: findedTask.priority,
-        startDate: findedTask.startDate,
-        deadline: findedTask.deadline
-    })
-    if(res.data.resultCode === 0){
-        dispatch(editTaskAC(todolistID, taskID, newTitle))
-        dispatch(setStatus("succeeded"))
-    }
-    else{
-        dispatch(setStatus("failed"))
+    try {
+        dispatch(setStatus("loading"))
+        const findedTask = getState().tasks[todolistID].find(task => task.id === taskID)
+        if (!findedTask) {
+            console.warn("Task wasn't found in the state")
+            dispatch(setStatus("failed"))
+            return
+        }
+        const res = await tasksAPI.updateTask(todolistID, taskID, {
+            title: newTitle,
+            description: findedTask.description,
+            status: findedTask.status,
+            priority: findedTask.priority,
+            startDate: findedTask.startDate,
+            deadline: findedTask.deadline
+        })
+        if (res.data.resultCode === 0) {
+            dispatch(editTaskAC(todolistID, taskID, newTitle))
+            dispatch(setStatus("succeeded"))
+        } else {
+            handleServerAppError(res.data, dispatch)
+        }
+    } catch
+        (error: any) {
+        handleServerNetworkError(error, dispatch)
     }
 }
 export const changeStatusTaskTC = (todolistID: string, taskID: string, status: TaskStatus): AppThunk => async (dispatch, getState: () => AppRootState) => {
-    dispatch(setStatus("loading"))
-    const findedTask = getState().tasks[todolistID].find(task => task.id === taskID)
-    if(!findedTask){
-        console.warn("Task wasn't found in the state")
-        dispatch(setStatus("failed"))
-        return
-    }
-    const res = await tasksAPI.updateTask(todolistID, taskID, {title: findedTask.title,
-        description: findedTask.description,
-        status: status,
-        priority: findedTask.priority,
-        startDate: findedTask.startDate,
-        deadline: findedTask.deadline})
-    if(res.data.resultCode === 0){
-        dispatch(changeStatusCheckboxAC(todolistID, taskID, status))
-        dispatch(setStatus("succeeded"))
-    }
-    else{
-        dispatch(setStatus("failed"))
+    try {
+        dispatch(setStatus("loading"))
+        const findedTask = getState().tasks[todolistID].find(task => task.id === taskID)
+        if (!findedTask) {
+            console.warn("Task wasn't found in the state")
+            dispatch(setStatus("failed"))
+            return
+        }
+        const res = await tasksAPI.updateTask(todolistID, taskID, {
+            title: findedTask.title,
+            description: findedTask.description,
+            status: status,
+            priority: findedTask.priority,
+            startDate: findedTask.startDate,
+            deadline: findedTask.deadline
+        })
+        if (res.data.resultCode === 0) {
+            dispatch(changeStatusCheckboxAC(todolistID, taskID, status))
+            dispatch(setStatus("succeeded"))
+        } else {
+            handleServerAppError(res.data, dispatch)
+        }
+    } catch
+        (error: any) {
+        handleServerNetworkError(error, dispatch)
     }
 }
 //type for Action

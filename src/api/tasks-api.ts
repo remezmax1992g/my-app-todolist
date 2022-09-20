@@ -39,7 +39,7 @@ export type TaskType = {
     todoListId: string
     order: number
 }
-type ResponseTaskType<D = {}> = {
+export type ResponseTaskType<D = {}> = {
     data: D
     messages: Array<string>
     resultCode: number
