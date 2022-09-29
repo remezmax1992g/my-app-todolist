@@ -93,6 +93,7 @@ export const deleteTodolistTC = (todolistID: string): AppThunk => async dispatch
 
 }
 export const updateTodolistTC = (todolistID: string, newTitle: string): AppThunk => async dispatch => {
+    // @ts-ignore
     try {
         dispatch(setStatus("loading"))
         dispatch(changeStatusTodolistAC(todolistID, "loading"))
@@ -103,7 +104,13 @@ export const updateTodolistTC = (todolistID: string, newTitle: string): AppThunk
         } else {
             handleServerAppError(res.data, dispatch)
         }
-    } catch (error: any) {
+    } catch (error: any){
+        // const err = e as Error | AxiosError
+        // if(axios.isAxiosError(err)){
+        //     const error = err.response?.data
+        //     ?(err.response.data as {error: string}).error
+        //         : err.message
+        // }
         handleServerNetworkError(error, dispatch)
     } finally {
         dispatch(changeStatusTodolistAC(todolistID, "idle"))

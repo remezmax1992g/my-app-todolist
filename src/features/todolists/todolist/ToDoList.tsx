@@ -68,7 +68,9 @@ const ToDoList = React.memo(({todolist,changeFilter, removeTodolist,editToDoList
                  </IconButton>
             </h2>
             <span>
-                <AddItemForm addItem={addTaskHandler} label={"Type task"} disabled={todolist.status === "loading"}/>
+                <AddItemForm addItem={addTaskHandler}
+                             label={"Type task"}
+                             disabled={todolist.status === "loading"}/>
                 <TasksItem tasks={tasksAfterFiltering}
                            removeTask={removeTaskHandler}
                            changeStatusCheckBox={changeStatusCheckboxHandler}

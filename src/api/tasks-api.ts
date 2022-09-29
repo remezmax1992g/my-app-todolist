@@ -44,7 +44,7 @@ export type ResponseTaskType<D = {}> = {
     messages: Array<string>
     resultCode: number
 }
-type UpdateTaskResponseModelType = {
+export type UpdateTaskResponseModelType = {
     title: string
     description: string
     status: TaskStatus
