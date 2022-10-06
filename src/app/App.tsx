@@ -7,7 +7,7 @@ import TodolistsItem from "../features/todolists/TodolistsItem";
 import ErrorSnackbar from "../components/ErrorSnackbar/ErrorSnackbar";
 import {useAppDispatch, useAppSelector} from "../redux/hook";
 import Login from "../features/login/Login";
-import {BrowserRouter, Route, Routes} from "react-router-dom";
+import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
 import {getIsInitialized} from "../reducers/app-reducer";
 import {deleteLog} from "../reducers/auth-reducer";
 
@@ -50,8 +50,10 @@ function App() {
                 </AppBar>
                 <Container fixed>
                     <Routes>
-                        <Route path={"/"} element={<TodolistsItem/>}/>
-                        <Route path={"/Login"} element={<Login/>}/>
+                        <Route path={"/my-app-todolist"} element={<TodolistsItem/>}/>
+                        <Route path={"/my-app-todolist/Login"} element={<Login/>}/>
+                        <Route path={"/my-app-todolist/404"} element={<h1>PAGE IS NOT FOUND</h1>}/>
+                        <Route path={"*"} element={<Navigate to={"/my-app-todolist/404"}/>}/>
                     </Routes>
                 </Container>
             </div>

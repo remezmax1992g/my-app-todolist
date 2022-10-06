@@ -33,7 +33,7 @@ const TodolistsItem = () => {
         dispatch(updateTodolistTC(todoListID, newTitle))
     }, [dispatch]);
     if(!isLogin){
-        return <Navigate  to="/Login"/>
+        return <Navigate  to="/my-app-todolist/Login"/>
     }
     return (
         <>
