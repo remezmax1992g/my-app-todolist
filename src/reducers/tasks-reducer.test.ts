@@ -26,7 +26,7 @@ beforeEach(() => {
 })
 
 test("correct task should be deleted from correct array", () =>{
-    const endState = tasksReducer(startState, removeTaskAC({todolistID: "todolistID2", id: "2"}))
+    const endState = tasksReducer(startState, removeTaskAC({todolistID: "todolistID2", taskID: "2"}))
     expect(endState["todolistID1"].length).toBe(3)
     expect(endState["todolistID2"].length).toBe(2)
     expect(endState["todolistID2"].every(t => t.id !== "2")).toBeTruthy()
@@ -51,13 +51,13 @@ test('correct task should be added to correct array', () => {
 })
 test('status of specified task should be changed', () => {
 
-    const endState = tasksReducer(startState, changeStatusCheckboxAC({todolistID: "todolistID2", id: "2", status: TaskStatus.Completed}))
+    const endState = tasksReducer(startState, changeStatusCheckboxAC({todolistID: "todolistID2", taskID: "2", status: TaskStatus.Completed}))
     expect(endState["todolistID2"][1].status).toBe(TaskStatus.Completed);
     expect(endState["todolistID1"][1].status).toBe(TaskStatus.New);
 });
 test('title of specified task should be changed', () => {
 
-    const endState = tasksReducer(startState, editTaskAC({todolistID: "todolistID2", id: "2", title: "Milkyway"}))
+    const endState = tasksReducer(startState, editTaskAC({todolistID: "todolistID2", taskID: "2", title: "Milkyway"}))
     expect(endState["todolistID2"][1].title).toBe("Milkyway");
     expect(endState["todolistID1"][1].title).toBe("JS");
 });

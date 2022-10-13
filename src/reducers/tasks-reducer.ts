@@ -15,19 +15,19 @@ const slice = createSlice(({
     name: "tasks",
     initialState: initialStateForTasks,
     reducers: {
-        removeTaskAC(state, action: PayloadAction<{ todolistID: string, id: string }>) {
-            const index = state[action.payload.todolistID].findIndex(t => t.id === action.payload.id)
+        removeTaskAC(state, action: PayloadAction<{ todolistID: string, taskID: string }>) {
+            const index = state[action.payload.todolistID].findIndex(t => t.id === action.payload.taskID)
             state[action.payload.todolistID].splice(index, 1)
         },
         addTaskAC(state, action: PayloadAction<{ task: TaskType }>) {
             state[action.payload.task.todoListId].unshift(action.payload.task)
         },
-        changeStatusCheckboxAC(state, action: PayloadAction<{ todolistID: string, id: string, status: TaskStatus }>) {
-            const index = state[action.payload.todolistID].findIndex(t => t.id === action.payload.id)
+        changeStatusCheckboxAC(state, action: PayloadAction<{ todolistID: string, taskID: string, status: TaskStatus }>) {
+            const index = state[action.payload.todolistID].findIndex(t => t.id === action.payload.taskID)
             state[action.payload.todolistID][index].status = action.payload.status
         },
-        editTaskAC(state, action: PayloadAction<{ todolistID: string, id: string, title: string }>) {
-            const index = state[action.payload.todolistID].findIndex(t => t.id === action.payload.id)
+        editTaskAC(state, action: PayloadAction<{ todolistID: string, taskID: string, title: string }>) {
+            const index = state[action.payload.todolistID].findIndex(t => t.id === action.payload.taskID)
             state[action.payload.todolistID][index].title = action.payload.title
         },
         setTasksAC(state, action: PayloadAction<{ todolistID: string, tasks: TaskType[] }>) {
@@ -50,15 +50,16 @@ const slice = createSlice(({
 
     }
 }))
+//reducer
 export const tasksReducer = slice.reducer
+//actionCreators
 export const {removeTaskAC, addTaskAC, changeStatusCheckboxAC, editTaskAC, setTasksAC} = slice.actions
-
 //ThunkCreators
 export const fetchTaskTC = (todolistID: string): AppThunk => async dispatch => {
     try {
         dispatch(setStatus({status: "loading"}))
         const res = await tasksAPI.getTask(todolistID)
-        dispatch(setTasksAC({todolistID: todolistID, tasks: res.data.items}))
+        dispatch(setTasksAC({todolistID, tasks: res.data.items}))
         dispatch(setStatus({status: "succeeded"}))
     } catch (error: any) {
         handleServerNetworkError(error, dispatch)
@@ -84,7 +85,7 @@ export const deleteTaskTC = (todolistID: string, taskID: string): AppThunk => as
         dispatch(setStatus({status: "loading"}))
         const res = await tasksAPI.deleteTask(todolistID, taskID)
         if (res.data.resultCode === 0) {
-            dispatch(removeTaskAC({todolistID: todolistID, id: taskID}))
+            dispatch(removeTaskAC({todolistID, taskID}))
             dispatch(setStatus({status: "succeeded"}))
         } else {
             handleServerAppError(res.data, dispatch)
@@ -95,7 +96,7 @@ export const deleteTaskTC = (todolistID: string, taskID: string): AppThunk => as
     }
 
 }
-export const updateTaskTC = (todolistID: string, taskID: string, newTitle: string): AppThunk => async (dispatch, getState: () => AppRootState) => {
+export const updateTaskTC = (todolistID: string, taskID: string, title: string): AppThunk => async (dispatch, getState: () => AppRootState) => {
     try {
         dispatch(setStatus({status: "loading"}))
         const findedTask = getState().tasks[todolistID].find(task => task.id === taskID)
@@ -105,7 +106,7 @@ export const updateTaskTC = (todolistID: string, taskID: string, newTitle: strin
             return
         }
         const res = await tasksAPI.updateTask(todolistID, taskID, {
-            title: newTitle,
+            title: title,
             description: findedTask.description,
             status: findedTask.status,
             priority: findedTask.priority,
@@ -113,7 +114,7 @@ export const updateTaskTC = (todolistID: string, taskID: string, newTitle: strin
             deadline: findedTask.deadline
         })
         if (res.data.resultCode === 0) {
-            dispatch(editTaskAC({todolistID: todolistID, id: taskID, title: newTitle}))
+            dispatch(editTaskAC({todolistID, taskID, title}))
             dispatch(setStatus({status: "succeeded"}))
         } else {
             handleServerAppError(res.data, dispatch)
@@ -141,7 +142,7 @@ export const changeStatusTaskTC = (todolistID: string, taskID: string, status: T
             deadline: findedTask.deadline
         })
         if (res.data.resultCode === 0) {
-            dispatch(changeStatusCheckboxAC({todolistID: todolistID, id: taskID, status: status}))
+            dispatch(changeStatusCheckboxAC({todolistID, taskID, status}))
             dispatch(setStatus({status: "succeeded"}))
         } else {
             handleServerAppError(res.data, dispatch)

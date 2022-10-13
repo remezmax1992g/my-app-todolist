@@ -44,7 +44,7 @@ export const fetchTodolistsTC = (): AppThunk => async dispatch => {
     try {
         dispatch(setStatus({status: "loading"}))
         const res = await todolistsAPI.getTodolists()
-        dispatch(setTodolistsAC({todolists:res.data}))
+        dispatch(setTodolistsAC({todolists: res.data}))
         dispatch(setStatus({status: "succeeded"}))
     } catch (error: any) {
         handleServerNetworkError(error, dispatch)
@@ -67,10 +67,10 @@ export const createTodolistTC = (newTitle: string): AppThunk => async dispatch =
 export const deleteTodolistTC = (todolistID: string): AppThunk => async dispatch => {
     try {
         dispatch(setStatus({status: "loading"}))
-        dispatch(changeStatusTodolistAC({todolistID:todolistID, status: "loading"}))
+        dispatch(changeStatusTodolistAC({todolistID, status: "loading"}))
         const res = await todolistsAPI.deleteTodolist(todolistID)
         if (res.data.resultCode === 0) {
-            dispatch(removeTodolistAC({todolistID: todolistID}))
+            dispatch(removeTodolistAC({todolistID}))
             dispatch(setStatus({status: "succeeded"}))
         } else {
             handleServerAppError(res.data, dispatch)
@@ -80,14 +80,14 @@ export const deleteTodolistTC = (todolistID: string): AppThunk => async dispatch
     }
 
 }
-export const updateTodolistTC = (todolistID: string, newTitle: string): AppThunk => async dispatch => {
+export const updateTodolistTC = (todolistID: string, title: string): AppThunk => async dispatch => {
     // @ts-ignore
     try {
         dispatch(setStatus({status: "loading"}))
-        dispatch(changeStatusTodolistAC({todolistID:todolistID, status: "loading"}))
-        const res = await todolistsAPI.updateTodolist(todolistID, newTitle)
+        dispatch(changeStatusTodolistAC({todolistID, status: "loading"}))
+        const res = await todolistsAPI.updateTodolist(todolistID, title)
         if (res.data.resultCode === 0) {
-            dispatch(editTodolistAC({todolistID: todolistID, title: newTitle}))
+            dispatch(editTodolistAC({todolistID, title}))
             dispatch(setStatus({status: "succeeded"}))
         } else {
             handleServerAppError(res.data, dispatch)
@@ -95,7 +95,7 @@ export const updateTodolistTC = (todolistID: string, newTitle: string): AppThunk
     } catch (error: any){
         handleServerNetworkError(error, dispatch)
     } finally {
-        dispatch(changeStatusTodolistAC({todolistID:todolistID, status: "idle"}))
+        dispatch(changeStatusTodolistAC({todolistID, status: "idle"}))
     }
 }
 //type for Action
