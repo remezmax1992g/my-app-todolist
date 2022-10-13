@@ -2,14 +2,14 @@ import {Provider} from "react-redux";
 import React from 'react'
 import {applyMiddleware, combineReducers, legacy_createStore as createStore} from "redux";
 import {tasksReducer} from "../reducers/tasks-reducer";
-import {todolistsReducer} from "../reducers/todolists-reducer";
+import {todosReducer} from "../reducers/todolists-reducer";
 
 import thunkMiddleWare from "redux-thunk";
 import {appReducer} from "../reducers/app-reducer";
 
 const rootReducer = combineReducers({
     tasks: tasksReducer,
-    todolists: todolistsReducer,
+    todolists: todosReducer,
     app: appReducer
 })
 

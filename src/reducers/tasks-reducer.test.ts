@@ -26,7 +26,7 @@ beforeEach(() => {
 })
 
 test("correct task should be deleted from correct array", () =>{
-    const endState = tasksReducer(startState, removeTaskAC("todolistID2", "2"))
+    const endState = tasksReducer(startState, removeTaskAC({todolistID: "todolistID2", id: "2"}))
     expect(endState["todolistID1"].length).toBe(3)
     expect(endState["todolistID2"].length).toBe(2)
     expect(endState["todolistID2"].every(t => t.id !== "2")).toBeTruthy()
@@ -42,7 +42,7 @@ test('correct task should be added to correct array', () => {
         deadline: "",
         todoListId: "todolistID2",
         order: 0}
-    const endState = tasksReducer(startState, addTaskAC(newTask))
+    const endState = tasksReducer(startState, addTaskAC({task:newTask}))
     expect(endState["todolistID1"].length).toBe(3);
     expect(endState["todolistID2"].length).toBe(4);
     expect(endState["todolistID2"][0].id).toBeDefined();
@@ -51,19 +51,19 @@ test('correct task should be added to correct array', () => {
 })
 test('status of specified task should be changed', () => {
 
-    const endState = tasksReducer(startState, changeStatusCheckboxAC("todolistID2", "2", TaskStatus.Completed))
+    const endState = tasksReducer(startState, changeStatusCheckboxAC({todolistID: "todolistID2", id: "2", status: TaskStatus.Completed}))
     expect(endState["todolistID2"][1].status).toBe(TaskStatus.Completed);
     expect(endState["todolistID1"][1].status).toBe(TaskStatus.New);
 });
 test('title of specified task should be changed', () => {
 
-    const endState = tasksReducer(startState, editTaskAC("todolistID2", "2", "Milkyway"))
+    const endState = tasksReducer(startState, editTaskAC({todolistID: "todolistID2", id: "2", title: "Milkyway"}))
     expect(endState["todolistID2"][1].title).toBe("Milkyway");
     expect(endState["todolistID1"][1].title).toBe("JS");
 });
 test('tasks should be set to the state', () => {
 
-    const endState = tasksReducer({["todolistID1"]:[],["todolistID2"]:[]}, setTasksAC("todolistID1", startState["todolistID1"]) )
+    const endState = tasksReducer({["todolistID1"]:[],["todolistID2"]:[]}, setTasksAC({todolistID: "todolistID1", tasks: startState["todolistID1"]}) )
     expect(endState["todolistID1"].length).toBe(3);
     expect(endState["todolistID2"].length).toBe(0);
 

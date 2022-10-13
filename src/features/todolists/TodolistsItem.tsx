@@ -14,14 +14,14 @@ import {Navigate} from "react-router-dom";
 const TodolistsItem = () => {
     //Store
     const dispatch = useAppDispatch()
-    const todolists = useAppSelector(state => state.todolists)
+    const todolists = useAppSelector(state => state.todos)
     const isLogin = useAppSelector(state => state.auth.isLogin)
     //function
     useEffect(() => {
         dispatch(fetchTodolistsTC())
     }, [])
     const changeFilter = useCallback((todolistID: string, filter: FilteredValuesType) => {
-        dispatch(changeFilterTodolistAC(todolistID, filter))
+        dispatch(changeFilterTodolistAC({todolistID: todolistID, filter: filter}))
     }, [dispatch])
     const removeTodolist = useCallback((todolistID: string) => {
         dispatch(deleteTodolistTC(todolistID))

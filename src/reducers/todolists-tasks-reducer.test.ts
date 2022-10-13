@@ -2,8 +2,7 @@ import {
     addTodolistAC,
     removeTodolistAC,
     setTodolistsAC,
-    TodolistEntityType,
-    todolistsReducer
+    TodolistEntityType, todosReducer,
 } from "./todolists-reducer";
 import {tasksReducer, TasksType} from "./tasks-reducer";
 import {TaskPriority, TaskStatus} from "../api/tasks-api";
@@ -18,10 +17,10 @@ test('ids should be equals', () => {
         addedDate: "",
         order: 0
     }
-    const action = addTodolistAC(todolist);
+    const action = addTodolistAC({todolist: todolist});
 
     const endTasksState = tasksReducer(startTasksState, action)
-    const endTodolistsState = todolistsReducer(startTodolistsState, action)
+    const endTodolistsState = todosReducer(startTodolistsState, action)
 
     const keys = Object.keys(endTasksState);
     const idFromTasks = keys[0];
@@ -45,7 +44,7 @@ test('property with todolistId should be deleted', () => {
 
     };
 
-    const action = removeTodolistAC("todolistId2");
+    const action = removeTodolistAC({todolistID: "todolistId2"});
 
     const endState = tasksReducer(startState, action)
 
@@ -60,7 +59,7 @@ test('empty task array should be added when we set todolists', () => {
         {id: "todolistID1", title: 'What to learn', filter: 'all', addedDate: "", order: 0},
         {id: "todolistID2", title: 'What to buy', filter: 'all', addedDate: "", order: 0},
     ]
-    const endState = tasksReducer({}, setTodolistsAC(startState))
+    const endState = tasksReducer({}, setTodolistsAC({todolists: startState}))
     expect(endState["todolistID1"]).toStrictEqual([])
     expect(endState["todolistID2"]).toStrictEqual([])
 });

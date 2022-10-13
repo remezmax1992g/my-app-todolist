@@ -1,5 +1,5 @@
 import {combineReducers, legacy_createStore as createStore} from "redux";
-import {ActionTodolistType, todolistsReducer} from "../reducers/todolists-reducer";
+import {ActionTodolistType, todosReducer} from "../reducers/todolists-reducer";
 import {ActionTaskType, tasksReducer} from "../reducers/tasks-reducer";
 import thunkMiddleWare, {ThunkAction, ThunkDispatch} from "redux-thunk";
 import {appReducer, AppStatusErrorActionType} from "../reducers/app-reducer";
@@ -8,7 +8,7 @@ import {configureStore} from "@reduxjs/toolkit";
 
 
 const rootReducer = combineReducers({
-    todolists: todolistsReducer,
+    todos: todosReducer,
     tasks: tasksReducer,
     app: appReducer,
     auth: authReducer
