@@ -6,14 +6,14 @@ import {AxiosError} from "axios";
 
 export const handleServerAppError = <D>(data: ResponseTodolistType<D> | ResponseTaskType<D>, dispatch: AppDispatch) => {
     if(data.messages.length !== 0){
-        dispatch(setError(data.messages[0]))
+        dispatch(setError({error: data.messages[0]}))
     }
     else{
-        dispatch(setError("Undefined error"))
+        dispatch(setError({error: "Undefined error"}))
     }
-    dispatch(setStatus("failed"))
+    dispatch(setStatus({status: "failed"}))
 }
 export const handleServerNetworkError = (error: AxiosError, dispatch: AppDispatch) => {
-    dispatch(setError(error.message ? error.message : "Undefined error"))
-    dispatch(setStatus("failed"))
+    dispatch(setError({error: error.message ? error.message : "Undefined error"}))
+    dispatch(setStatus({status: "failed"}))
 }

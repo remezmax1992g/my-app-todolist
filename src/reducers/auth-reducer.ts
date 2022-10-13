@@ -2,31 +2,32 @@ import {AppThunk} from "../redux/redux";
 import {setStatus} from "./app-reducer";
 import {handleServerAppError, handleServerNetworkError} from "../utilits/error-utilits";
 import {authAPI, LoginParamsType} from "../api/auth-api";
+import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 
-const SET_IS_LOGIN = "SET-IS-LOGIN"
-const initialState: AuthType = {
+const initialState = {
     isLogin: false
 }
-
-export const authReducer = (state: AuthType = initialState, action: ActionAuthType): AuthType => {
-    switch(action.type){
-        case SET_IS_LOGIN:
-            return {...state, isLogin: action.payload.isLogin}
-        default:
-            return state
+const slice = createSlice({
+    name: "auth",
+    initialState: initialState,
+    reducers: {
+        setIsLogin(state, action: PayloadAction<{ isLogin: boolean }>) {
+            state.isLogin = action.payload.isLogin
+        }
     }
-}
-//ActionCreators
-export const setIsLogin = (isLogin: boolean) => ({type: SET_IS_LOGIN, payload: {isLogin}} as const)
+})
+
+export const authReducer = slice.reducer
+export const {setIsLogin} = slice.actions
 
 //ThunkCreators
 export const createLog = (data: LoginParamsType): AppThunk => async dispatch => {
     try {
-        dispatch(setStatus("loading"))
+        dispatch(setStatus({status: "loading"}))
         const res = await authAPI.login(data)
         if (res.data.resultCode === 0) {
-            dispatch(setIsLogin(true))
-            dispatch(setStatus("succeeded"))
+            dispatch(setIsLogin({isLogin: true}))
+            dispatch(setStatus({status:"succeeded"}))
         } else {
             handleServerAppError(res.data, dispatch)
         }
@@ -36,11 +37,11 @@ export const createLog = (data: LoginParamsType): AppThunk => async dispatch => 
 }
 export const deleteLog = (): AppThunk => async dispatch => {
     try {
-        dispatch(setStatus("loading"))
+        dispatch(setStatus({status:"loading"}))
         const res = await authAPI.logout()
         if (res.data.resultCode === 0) {
-            dispatch(setIsLogin(false))
-            dispatch(setStatus("succeeded"))
+            dispatch(setIsLogin({isLogin: false}))
+            dispatch(setStatus({status: "succeeded"}))
         } else {
             handleServerAppError(res.data, dispatch)
         }
@@ -49,7 +50,4 @@ export const deleteLog = (): AppThunk => async dispatch => {
     }
 }
 
-type AuthType = {
-    isLogin: boolean
-}
 export type ActionAuthType = ReturnType<typeof setIsLogin>
