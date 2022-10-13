@@ -34,8 +34,8 @@ const Login = () => {
                     }
                     if (!values.password) {
                         error.password = "Password is required"
-                    } else if(values.password.length <= 5){
-                        error.password = "Password must me more than 5 symbols"
+                    } else if(values.password.length <= 3){
+                        error.password = "Password must me more than 3 symbols"
                     }
                     return error
                 }

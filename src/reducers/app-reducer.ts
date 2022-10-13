@@ -1,9 +1,8 @@
-//constants
 import {AppThunk} from "../redux/redux";
 import {handleServerAppError, handleServerNetworkError} from "../utilits/error-utilits";
 import {authAPI} from "../api/auth-api";
 import {setIsLogin} from "./auth-reducer";
-
+//constants
 const APP_SET_STATUS = 'APP/SET-STATUS'
 const APP_SET_ERROR = 'APP/SET-ERROR'
 const APP_SET_IS_INITIALIZED = 'APP/SET-IS-INITIALIZED'
