@@ -1,8 +1,8 @@
 import {
     changeStatusCheckboxAC, createTaskTC, deleteTaskTC,
-    editTaskAC, fetchTaskTC,
+    fetchTaskTC,
     tasksReducer,
-    TasksType
+    TasksType, updateTaskTC
 } from "./tasks-reducer";
 import {TaskPriority, TaskStatus} from "../api/tasks-api";
 
@@ -54,7 +54,7 @@ test('status of specified task should be changed', () => {
 });
 test('title of specified task should be changed', () => {
 
-    const endState = tasksReducer(startState, editTaskAC({todolistID: "todolistID2", taskID: "2", title: "Milkyway"}))
+    const endState = tasksReducer(startState, updateTaskTC.fulfilled({todolistID: "todolistID2", taskID: "2", title: "Milkyway"}, "requestID", {todolistID: "todolistID2", taskID: "2", title: "Milkyway"}))
     expect(endState["todolistID2"][1].title).toBe("Milkyway");
     expect(endState["todolistID1"][1].title).toBe("JS");
 });
