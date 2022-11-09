@@ -46,7 +46,6 @@ export const fetchTodolistsTC = (): AppThunk => async dispatch => {
     try {
         dispatch(setStatus({status: "loading"}))
         const res = await todolistsAPI.getTodolists()
-        console.log("fetch")
         dispatch(setTodolistsAC({todolists: res.data}))
         dispatch(setStatus({status: "succeeded"}))
     } catch (error: any) {
@@ -84,7 +83,6 @@ export const deleteTodolistTC = (todolistID: string): AppThunk => async dispatch
 
 }
 export const updateTodolistTC = (todolistID: string, title: string): AppThunk => async dispatch => {
-    // @ts-ignore
     try {
         dispatch(setStatus({status: "loading"}))
         dispatch(changeStatusTodolistAC({todolistID, status: "loading"}))
