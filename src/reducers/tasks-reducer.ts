@@ -39,15 +39,26 @@ export const createTaskTC = createAsyncThunk('tasks/addTask', async (param:{todo
         handleServerNetworkError(error, thunkAPI.dispatch)
     }
 })
+export const deleteTaskTC = createAsyncThunk('tasks/deleteTask', async (param:{todolistID: string, taskID: string}, thunkAPI) => {
+    try {
+        thunkAPI.dispatch(setStatus({status: "loading"}))
+        const res = await tasksAPI.deleteTask(param.todolistID, param.taskID)
+        if (res.data.resultCode === 0) {
+            thunkAPI.dispatch(setStatus({status: "succeeded"}))
+            return {todolistID: param.todolistID, taskID: param.taskID}
+        } else {
+            handleServerAppError(res.data, thunkAPI.dispatch)
+        }
+    } catch
+        (error: any) {
+        handleServerNetworkError(error, thunkAPI.dispatch)
+    }
+})
 
 const slice = createSlice(({
     name: "tasks",
     initialState: initialStateForTasks,
     reducers: {
-        removeTaskAC(state, action: PayloadAction<{ todolistID: string, taskID: string }>) {
-            const index = state[action.payload.todolistID].findIndex(t => t.id === action.payload.taskID)
-            state[action.payload.todolistID].splice(index, 1)
-        },
         changeStatusCheckboxAC(state, action: PayloadAction<{ todolistID: string, taskID: string, status: TaskStatus }>) {
             const index = state[action.payload.todolistID].findIndex(t => t.id === action.payload.taskID)
             state[action.payload.todolistID][index].status = action.payload.status
@@ -80,30 +91,21 @@ const slice = createSlice(({
                 state[action.payload.task.todoListId].unshift(action.payload.task)
             }
         })
+        builder.addCase(deleteTaskTC.fulfilled, (state, action) => {
+            if (action.payload) {
+                const index = state[action.payload.todolistID].findIndex(t => t.id === action.payload?.taskID)
+                state[action.payload.todolistID].splice(index, 1)
+            }
+        })
     }
 }))
 //reducer
 export const tasksReducer = slice.reducer
 //actionCreators
-export const {removeTaskAC, changeStatusCheckboxAC, editTaskAC} = slice.actions
+export const {changeStatusCheckboxAC, editTaskAC} = slice.actions
 //ThunkCreators
 
-export const deleteTaskTC = (todolistID: string, taskID: string): AppThunk => async dispatch => {
-    try {
-        dispatch(setStatus({status: "loading"}))
-        const res = await tasksAPI.deleteTask(todolistID, taskID)
-        if (res.data.resultCode === 0) {
-            dispatch(removeTaskAC({todolistID, taskID}))
-            dispatch(setStatus({status: "succeeded"}))
-        } else {
-            handleServerAppError(res.data, dispatch)
-        }
-    } catch
-        (error: any) {
-        handleServerNetworkError(error, dispatch)
-    }
 
-}
 export const updateTaskTC = (todolistID: string, taskID: string, title: string): AppThunk => async (dispatch, getState: () => AppRootState) => {
     try {
         dispatch(setStatus({status: "loading"}))
@@ -162,7 +164,6 @@ export const changeStatusTaskTC = (todolistID: string, taskID: string, status: T
 }
 //type for Action
 export type ActionTaskType =
-    | ReturnType<typeof removeTaskAC>
     | RemoveTodolistACType
     | AddTodolistACType
     | ReturnType<typeof changeStatusCheckboxAC>
