@@ -16,8 +16,9 @@ export const fetchTaskTC = createAsyncThunk('tasks/fetchTasks', async (todolistI
     try {
         thunkAPI.dispatch(setStatus({status: "loading"}))
         const res = await tasksAPI.getTask(todolistID)
-        thunkAPI.dispatch(setTasksAC({todolistID, tasks: res.data.items}))
         thunkAPI.dispatch(setStatus({status: "succeeded"}))
+        const tasks = res.data.items
+        return {todolistID, tasks}
     } catch (error: any) {
         handleServerNetworkError(error, thunkAPI.dispatch)
     }
@@ -42,9 +43,7 @@ const slice = createSlice(({
             const index = state[action.payload.todolistID].findIndex(t => t.id === action.payload.taskID)
             state[action.payload.todolistID][index].title = action.payload.title
         },
-        setTasksAC(state, action: PayloadAction<{ todolistID: string, tasks: TaskType[] }>) {
-            state[action.payload.todolistID] = action.payload.tasks
-        }
+
     },
     extraReducers: (builder) => {
         builder.addCase(removeTodolistAC, (state, action) => {
@@ -53,11 +52,15 @@ const slice = createSlice(({
         builder.addCase(addTodolistAC, (state, action) => {
             state[action.payload.todolist.id] = []
         })
-
         builder.addCase(setTodolistsAC, (state, action) => {
             action.payload.todolists.forEach(tl => {
                 state[tl.id] = []
             })
+        })
+        builder.addCase(fetchTaskTC.fulfilled, (state, action) => {
+            if (action.payload) {
+                state[action.payload.todolistID] = action.payload.tasks
+            }
         })
 
     }
@@ -65,7 +68,7 @@ const slice = createSlice(({
 //reducer
 export const tasksReducer = slice.reducer
 //actionCreators
-export const {removeTaskAC, addTaskAC, changeStatusCheckboxAC, editTaskAC, setTasksAC} = slice.actions
+export const {removeTaskAC, addTaskAC, changeStatusCheckboxAC, editTaskAC} = slice.actions
 //ThunkCreators
 export const createTaskTC = (todolistID: string, newTitle: string): AppThunk => async dispatch => {
     try {
@@ -163,7 +166,6 @@ export type ActionTaskType =
     | ReturnType<typeof changeStatusCheckboxAC>
     | ReturnType<typeof editTaskAC>
     | SetTodolistsACType
-    | ReturnType<typeof setTasksAC>
 //types for state
 export type TasksType = {
     [key: string]: TaskType[]

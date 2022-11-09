@@ -1,9 +1,8 @@
 import {
     addTaskAC,
     changeStatusCheckboxAC,
-    editTaskAC,
+    editTaskAC, fetchTaskTC,
     removeTaskAC,
-    setTasksAC,
     tasksReducer,
     TasksType
 } from "./tasks-reducer";
@@ -63,7 +62,7 @@ test('title of specified task should be changed', () => {
 });
 test('tasks should be set to the state', () => {
 
-    const endState = tasksReducer({["todolistID1"]:[],["todolistID2"]:[]}, setTasksAC({todolistID: "todolistID1", tasks: startState["todolistID1"]}) )
+    const endState = tasksReducer({["todolistID1"]:[],["todolistID2"]:[]}, fetchTaskTC.fulfilled({todolistID: "todolistID1", tasks: startState["todolistID1"]}, "", "todolistID1")  )
     expect(endState["todolistID1"].length).toBe(3);
     expect(endState["todolistID2"].length).toBe(0);
 
