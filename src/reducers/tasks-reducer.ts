@@ -9,6 +9,7 @@ import {AppRootState, AppThunk} from "../redux/redux";
 import {setStatus} from "./app-reducer";
 import {handleServerAppError, handleServerNetworkError} from "../utilits/error-utilits";
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {AxiosError} from "axios";
 //initialState
 const initialStateForTasks: TasksType = {}
 
@@ -19,9 +20,11 @@ export const fetchTaskTC = createAsyncThunk('tasks/fetchTasks', async (todolistI
         thunkAPI.dispatch(setStatus({status: "succeeded"}))
         const tasks = res.data.items
         return {todolistID, tasks}
-    } catch (error: any) {
-        handleServerNetworkError(error, thunkAPI.dispatch)
-    }
+    } catch (error) {
+    const err = error as Error | AxiosError<{ err: string }>
+    handleServerNetworkError(err, thunkAPI.dispatch)
+    return thunkAPI.rejectWithValue({})
+}
 })
 export const createTaskTC = createAsyncThunk('tasks/addTask', async (param:{todolistID: string, newTitle: string}, thunkAPI) => {
     try {
@@ -33,10 +36,12 @@ export const createTaskTC = createAsyncThunk('tasks/addTask', async (param:{todo
             return {task}
         } else {
             handleServerAppError(res.data, thunkAPI.dispatch)
+            return thunkAPI.rejectWithValue({})
         }
-    } catch
-        (error: any) {
-        handleServerNetworkError(error, thunkAPI.dispatch)
+    } catch (error) {
+        const err = error as Error | AxiosError<{ err: string }>
+        handleServerNetworkError(err, thunkAPI.dispatch)
+        return thunkAPI.rejectWithValue({})
     }
 })
 export const deleteTaskTC = createAsyncThunk('tasks/deleteTask', async (param:{todolistID: string, taskID: string}, thunkAPI) => {
@@ -48,10 +53,12 @@ export const deleteTaskTC = createAsyncThunk('tasks/deleteTask', async (param:{t
             return {todolistID: param.todolistID, taskID: param.taskID}
         } else {
             handleServerAppError(res.data, thunkAPI.dispatch)
+            return thunkAPI.rejectWithValue({})
         }
-    } catch
-        (error: any) {
-        handleServerNetworkError(error, thunkAPI.dispatch)
+    } catch (error) {
+        const err = error as Error | AxiosError<{ err: string }>
+        handleServerNetworkError(err, thunkAPI.dispatch)
+        return thunkAPI.rejectWithValue({})
     }
 })
 
@@ -82,20 +89,14 @@ const slice = createSlice(({
             })
         })
         builder.addCase(fetchTaskTC.fulfilled, (state, action) => {
-            if (action.payload) {
                 state[action.payload.todolistID] = action.payload.tasks
-            }
         })
         builder.addCase(createTaskTC.fulfilled, (state, action) => {
-            if (action.payload) {
                 state[action.payload.task.todoListId].unshift(action.payload.task)
-            }
         })
         builder.addCase(deleteTaskTC.fulfilled, (state, action) => {
-            if (action.payload) {
                 const index = state[action.payload.todolistID].findIndex(t => t.id === action.payload?.taskID)
                 state[action.payload.todolistID].splice(index, 1)
-            }
         })
     }
 }))
