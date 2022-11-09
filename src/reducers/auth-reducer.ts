@@ -3,10 +3,13 @@ import {setStatus} from "./app-reducer";
 import {handleServerAppError, handleServerNetworkError} from "../utilits/error-utilits";
 import {authAPI, LoginParamsType} from "../api/auth-api";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {setTodolistsAC} from "./todolists-reducer";
+
 
 const initialState = {
     isLogin: false
 }
+
 const slice = createSlice({
     name: "auth",
     initialState: initialState,
@@ -41,6 +44,7 @@ export const deleteLog = (): AppThunk => async dispatch => {
         const res = await authAPI.logout()
         if (res.data.resultCode === 0) {
             dispatch(setIsLogin({isLogin: false}))
+            dispatch(setTodolistsAC({todolists: []}))
             dispatch(setStatus({status: "succeeded"}))
         } else {
             handleServerAppError(res.data, dispatch)

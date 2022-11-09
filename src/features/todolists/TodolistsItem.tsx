@@ -33,7 +33,7 @@ const TodolistsItem = () => {
         dispatch(updateTodolistTC(todoListID, newTitle))
     }, [dispatch]);
     if(!isLogin){
-        return <Navigate  to="/my-app-todolist/Login"/>
+        return <Navigate  to="/Login"/>
     }
     return (
         <>
@@ -41,6 +41,7 @@ const TodolistsItem = () => {
                 <AddItemForm addItem={addToDoList}
                              label={"Type new to-do list"}/></Grid>
             <Grid container spacing={8}>{todolists.map((tl, index) => {
+                console.log(todolists,"-todolists")
                 return (<Grid item key={index}>
                         <Paper style={{padding: "10px"}}>
                             <ToDoList

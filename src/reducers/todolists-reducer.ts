@@ -6,6 +6,7 @@ import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 
 //initialSate
 const initialStateForTodolists: TodolistEntityType[] = []
+
 const slice = createSlice({
     name: "todos",
     initialState: initialStateForTodolists,
@@ -41,9 +42,11 @@ export const todosReducer = slice.reducer
 export const {removeTodolistAC, addTodolistAC, editTodolistAC, changeFilterTodolistAC, changeStatusTodolistAC, setTodolistsAC} = slice.actions
 //thunkCreators
 export const fetchTodolistsTC = (): AppThunk => async dispatch => {
+
     try {
         dispatch(setStatus({status: "loading"}))
         const res = await todolistsAPI.getTodolists()
+        console.log("fetch")
         dispatch(setTodolistsAC({todolists: res.data}))
         dispatch(setStatus({status: "succeeded"}))
     } catch (error: any) {
