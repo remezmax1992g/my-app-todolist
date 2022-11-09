@@ -23,6 +23,22 @@ export const fetchTaskTC = createAsyncThunk('tasks/fetchTasks', async (todolistI
         handleServerNetworkError(error, thunkAPI.dispatch)
     }
 })
+export const createTaskTC = createAsyncThunk('tasks/addTask', async (param:{todolistID: string, newTitle: string}, thunkAPI) => {
+    try {
+        thunkAPI.dispatch(setStatus({status: "loading"}))
+        const res = await tasksAPI.createTask(param.todolistID, param.newTitle)
+        if (res.data.resultCode === 0) {
+            thunkAPI.dispatch(setStatus({status: "succeeded"}))
+            const task = res.data.data.item
+            return {task}
+        } else {
+            handleServerAppError(res.data, thunkAPI.dispatch)
+        }
+    } catch
+        (error: any) {
+        handleServerNetworkError(error, thunkAPI.dispatch)
+    }
+})
 
 const slice = createSlice(({
     name: "tasks",
@@ -31,9 +47,6 @@ const slice = createSlice(({
         removeTaskAC(state, action: PayloadAction<{ todolistID: string, taskID: string }>) {
             const index = state[action.payload.todolistID].findIndex(t => t.id === action.payload.taskID)
             state[action.payload.todolistID].splice(index, 1)
-        },
-        addTaskAC(state, action: PayloadAction<{ task: TaskType }>) {
-            state[action.payload.task.todoListId].unshift(action.payload.task)
         },
         changeStatusCheckboxAC(state, action: PayloadAction<{ todolistID: string, taskID: string, status: TaskStatus }>) {
             const index = state[action.payload.todolistID].findIndex(t => t.id === action.payload.taskID)
@@ -62,29 +75,19 @@ const slice = createSlice(({
                 state[action.payload.todolistID] = action.payload.tasks
             }
         })
-
+        builder.addCase(createTaskTC.fulfilled, (state, action) => {
+            if (action.payload) {
+                state[action.payload.task.todoListId].unshift(action.payload.task)
+            }
+        })
     }
 }))
 //reducer
 export const tasksReducer = slice.reducer
 //actionCreators
-export const {removeTaskAC, addTaskAC, changeStatusCheckboxAC, editTaskAC} = slice.actions
+export const {removeTaskAC, changeStatusCheckboxAC, editTaskAC} = slice.actions
 //ThunkCreators
-export const createTaskTC = (todolistID: string, newTitle: string): AppThunk => async dispatch => {
-    try {
-        dispatch(setStatus({status: "loading"}))
-        const res = await tasksAPI.createTask(todolistID, newTitle)
-        if (res.data.resultCode === 0) {
-            dispatch(addTaskAC({task: res.data.data.item}))
-            dispatch(setStatus({status: "succeeded"}))
-        } else {
-            handleServerAppError(res.data, dispatch)
-        }
-    } catch
-        (error: any) {
-        handleServerNetworkError(error, dispatch)
-    }
-}
+
 export const deleteTaskTC = (todolistID: string, taskID: string): AppThunk => async dispatch => {
     try {
         dispatch(setStatus({status: "loading"}))
@@ -161,7 +164,6 @@ export const changeStatusTaskTC = (todolistID: string, taskID: string, status: T
 export type ActionTaskType =
     | ReturnType<typeof removeTaskAC>
     | RemoveTodolistACType
-    | ReturnType<typeof addTaskAC>
     | AddTodolistACType
     | ReturnType<typeof changeStatusCheckboxAC>
     | ReturnType<typeof editTaskAC>

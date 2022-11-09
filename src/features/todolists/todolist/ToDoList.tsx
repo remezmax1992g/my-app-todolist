@@ -50,7 +50,7 @@ const ToDoList = React.memo(({todolist,changeFilter, removeTodolist,editToDoList
         editToDoList(todolist.id, newTitle)
     },[editToDoList, todolist.id])
     const addTaskHandler = useCallback((newTitle: string) => {
-        dispatch(createTaskTC(todolist.id, newTitle))
+        dispatch(createTaskTC({todolistID: todolist.id, newTitle}))
     },[dispatch, todolist.id])
     const removeTaskHandler = useCallback((taskID: string) => {dispatch(deleteTaskTC(todolist.id, taskID))}, [dispatch, todolist.id])
     const changeStatusCheckboxHandler = useCallback((taskID: string, status: TaskStatus) => {dispatch(changeStatusTaskTC(todolist.id, taskID, status))},[dispatch, todolist.id])
