@@ -27,11 +27,11 @@ const Login = () => {
                 },
                 validate: values => {
                     const error: FormikErrorType = {}
-                    if (!values.email) {
-                        error.email = "Email is required"
-                    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-                        error.email = 'Invalid email address'
-                    }
+                    // if (!values.email) {
+                    //     error.email = "Email is required"
+                    // } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+                    //     error.email = 'Invalid email address'
+                    // }
                     if (!values.password) {
                         error.password = "Password is required"
                     } else if(values.password.length <= 3){
