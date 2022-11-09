@@ -24,12 +24,10 @@ const Login = () => {
                 },
                 onSubmit: async (values:LoginParamsType, formikHelpers:FormikHelpers<LoginParamsType>) => {
                     const res = await dispatch(createLog(values))
-                    console.log(res)
 
                     if(createLog.rejected.match(res)){
                         if(res.payload?.fieldsErrors?.length){
-                            const error = res.payload?.fieldsErrors[0];
-                            console.log(error)
+                            const error = res.payload?.fieldsErrors[0]
                             formikHelpers.setFieldError(error.field, error.error)
                         }
                     }
