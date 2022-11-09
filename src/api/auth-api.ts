@@ -9,14 +9,14 @@ const instance = axios.create({
 })
 
 export const authAPI = {
-    login(data: LoginParamsType){
-        return instance.post<ResponseAuthType<{userID?: number}>>("auth/login", data)
+    login(data: LoginParamsType) {
+        return instance.post<ResponseAuthType<{ userID?: number }>>("auth/login", data)
     },
-    logout(){
+    logout() {
         return instance.delete<ResponseAuthType>("auth/login")
     },
-    getIsInitialized(){
-        return instance.get<ResponseAuthType<{id: number, email:string, login: string}>>("auth/me")
+    getIsInitialized() {
+        return instance.get<ResponseAuthType<{ id: number, email: string, login: string }>>("auth/me")
     }
 }
 
@@ -29,5 +29,10 @@ export type LoginParamsType = {
 export type ResponseAuthType<D = {}> = {
     data: D
     messages: Array<string>
+    fieldsErrors?: Array<FieldErrorType>
     resultCode: number
+}
+export type FieldErrorType = {
+    field: string
+    error: string
 }

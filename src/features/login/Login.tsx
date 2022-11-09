@@ -1,10 +1,11 @@
 import React from 'react';
 import {Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, TextField} from "@mui/material";
 import Button from "@mui/material/Button";
-import {useFormik} from "formik";
+import {FormikHelpers, useFormik} from "formik";
 import {useAppDispatch, useAppSelector} from "../../redux/hook";
 import {createLog} from "../../reducers/auth-reducer";
 import {Navigate} from "react-router-dom";
+import {LoginParamsType} from "../../api/auth-api";
 
 type FormikErrorType = {
     email?: string
@@ -21,9 +22,18 @@ const Login = () => {
                     password: "",
                     rememberMe: false
                 },
-                onSubmit: values => {
-                    dispatch(createLog(values))
-                    formik.resetForm()
+                onSubmit: async (values:LoginParamsType, formikHelpers:FormikHelpers<LoginParamsType>) => {
+                    const res = await dispatch(createLog(values))
+                    console.log(res)
+
+                    if(createLog.rejected.match(res)){
+                        if(res.payload?.fieldsErrors?.length){
+                            const error = res.payload?.fieldsErrors[0];
+                            console.log(error)
+                            formikHelpers.setFieldError(error.field, error.error)
+                        }
+                    }
+                    // formik.resetForm()
                 },
                 validate: values => {
                     const error: FormikErrorType = {}

@@ -1,15 +1,16 @@
 import {AppThunk} from "../redux/redux";
 import {setStatus} from "./app-reducer";
 import {handleServerAppError, handleServerNetworkError} from "../utilits/error-utilits";
-import {authAPI, LoginParamsType} from "../api/auth-api";
+import {authAPI, FieldErrorType, LoginParamsType} from "../api/auth-api";
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {setTodolistsAC} from "./todolists-reducer";
+import {AxiosError} from "axios";
 
 
 const initialState = {
     isLogin: false
 }
-export const createLog = createAsyncThunk("auth/login", async (param: LoginParamsType, thunkAPI) => {
+export const createLog = createAsyncThunk<{isLogin: boolean}, LoginParamsType, {rejectValue: {errors: string[], fieldsErrors?: Array<FieldErrorType>}}>("auth/login", async (param, thunkAPI) => {
     try {
         thunkAPI.dispatch(setStatus({status: "loading"}))
         const res = await authAPI.login(param)
@@ -18,9 +19,12 @@ export const createLog = createAsyncThunk("auth/login", async (param: LoginParam
             return {isLogin: true}
         } else {
             handleServerAppError(res.data, thunkAPI.dispatch)
+            return thunkAPI.rejectWithValue({errors: res.data.messages, fieldsErrors: res.data.fieldsErrors})
         }
-    } catch (error: any) {
-        handleServerNetworkError(error, thunkAPI.dispatch)
+    } catch (error) {
+        const e = error as Error | AxiosError<{e : string}>
+        handleServerNetworkError(e, thunkAPI.dispatch)
+        return thunkAPI.rejectWithValue({errors: [e.message], fieldsErrors: undefined})
     }
 })
 
@@ -34,9 +38,7 @@ const slice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(createLog.fulfilled, (state, action) => {
-            if(action.payload) {
                 state.isLogin = action.payload.isLogin
-            }
         })
     }
 })
@@ -56,8 +58,9 @@ export const deleteLog = (): AppThunk => async dispatch => {
         } else {
             handleServerAppError(res.data, dispatch)
         }
-    } catch (error: any) {
-        handleServerNetworkError(error, dispatch)
+    } catch (error) {
+        const e = error as Error | AxiosError<{e : string}>
+        handleServerNetworkError(e, dispatch)
     }
 }
 

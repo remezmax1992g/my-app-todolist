@@ -13,7 +13,7 @@ export const handleServerAppError = <D>(data: ResponseTodolistType<D> | Response
     }
     dispatch(setStatus({status: "failed"}))
 }
-export const handleServerNetworkError = (error: AxiosError, dispatch: Dispatch) => {
+export const handleServerNetworkError = (error: Error | AxiosError<{e : string}>, dispatch: Dispatch) => {
     dispatch(setError({error: error.message ? error.message : "Undefined error"}))
     dispatch(setStatus({status: "failed"}))
 }
