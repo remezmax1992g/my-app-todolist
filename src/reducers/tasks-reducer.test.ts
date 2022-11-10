@@ -1,5 +1,6 @@
 import {
-    changeStatusCheckboxAC, createTaskTC, deleteTaskTC,
+    changeStatusTaskTC,
+    createTaskTC, deleteTaskTC,
     fetchTaskTC,
     tasksReducer,
     TasksType, updateTaskTC
@@ -28,7 +29,6 @@ test("correct task should be deleted from correct array", () =>{
     expect(endState["todolistID2"].length).toBe(2)
     expect(endState["todolistID2"].every(t => t.id !== "2")).toBeTruthy()
 })
-
 test('correct task should be added to correct array', () => {
     const task = {id: "1",
         title: "juice",
@@ -48,7 +48,7 @@ test('correct task should be added to correct array', () => {
 })
 test('status of specified task should be changed', () => {
 
-    const endState = tasksReducer(startState, changeStatusCheckboxAC({todolistID: "todolistID2", taskID: "2", status: TaskStatus.Completed}))
+    const endState = tasksReducer(startState, changeStatusTaskTC.fulfilled({todolistID: "todolistID2", taskID: "2", status: TaskStatus.Completed}, "requestID", {todolistID: "todolistID2", taskID: "2", status: TaskStatus.Completed}))
     expect(endState["todolistID2"][1].status).toBe(TaskStatus.Completed);
     expect(endState["todolistID1"][1].status).toBe(TaskStatus.New);
 });
