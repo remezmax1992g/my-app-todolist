@@ -1,11 +1,9 @@
 import {
-    changeStatusTaskTC,
-    createTaskTC, deleteTaskTC,
-    fetchTaskTC,
     tasksReducer,
-    TasksType, updateTaskTC
+    TasksType
 } from "./tasks-reducer";
 import {TaskPriority, TaskStatus} from "../api/tasks-api";
+import {changeStatusTaskTC, createTaskTC, deleteTaskTC, fetchTaskTC, updateTaskTC} from "./tasks-action";
 
 let startState: TasksType
 beforeEach(() => {

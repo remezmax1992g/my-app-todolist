@@ -5,15 +5,11 @@ import EditableSpan from "../../../components/EditableSpan/EditableSpan";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {IconButton} from "@mui/material";
 import FilteredButton from "./FilteredButton/FilteredButton";
-import {
-    changeStatusTaskTC,
-    createTaskTC, deleteTaskTC,
-    fetchTaskTC,
-     updateTaskTC
-} from "../../../reducers/tasks-reducer";
 import {FilteredValuesType, TodolistEntityType} from "../../../reducers/todolists-reducer";
 import {TaskStatus, TaskType} from "../../../api/tasks-api";
-import {useAppDispatch, useAppSelector} from "../../../redux/hook";
+import {useAppSelector} from "../../../redux/hook";
+import {useActions} from "../../../utilits/redux-utilits";
+import {tasksAction} from "./index";
 //type
 type ToDoListPropsType = {
     //value
@@ -26,8 +22,8 @@ type ToDoListPropsType = {
 //Component
 const ToDoList = React.memo(({todolist,changeFilter, removeTodolist,editToDoList}: ToDoListPropsType) => {
     //store
-    const dispatch = useAppDispatch()
     const tasks = useAppSelector(state => state.tasks[todolist.id])
+    const {updateTaskTC, createTaskTC, deleteTaskTC, fetchTaskTC, changeStatusTaskTC} = useActions(tasksAction)
     //filtering
     let tasksAfterFiltering: Array<TaskType>
     switch (todolist.filter) {
@@ -42,19 +38,17 @@ const ToDoList = React.memo(({todolist,changeFilter, removeTodolist,editToDoList
     }
     //function
     useEffect(() => {
-        dispatch(fetchTaskTC(todolist.id))
-    },[])
+        fetchTaskTC(todolist.id)
+    },[todolist.id, fetchTaskTC])
     const removeTodolistHandler = useCallback(() => {
        removeTodolist(todolist.id)},[removeTodolist, todolist.id])
     const editToDoListHandler = useCallback((newTitle: string) => {
         editToDoList(todolist.id, newTitle)
     },[editToDoList, todolist.id])
-    const addTaskHandler = useCallback((newTitle: string) => {
-        dispatch(createTaskTC({todolistID: todolist.id, newTitle}))
-    },[dispatch, todolist.id])
-    const removeTaskHandler = useCallback((taskID: string) => {dispatch(deleteTaskTC({todolistID: todolist.id, taskID}))}, [dispatch, todolist.id])
-    const changeStatusCheckboxHandler = useCallback((taskID: string, status: TaskStatus) => {dispatch(changeStatusTaskTC({todolistID:todolist.id, taskID, status}))},[dispatch, todolist.id])
-    const editTaskHandler = useCallback((taskID: string, newTitle: string) => {dispatch(updateTaskTC({todolistID:todolist.id, taskID, title: newTitle}))}, [dispatch, todolist.id])
+    const addTaskHandler = useCallback((newTitle: string) => {createTaskTC({todolistID: todolist.id, newTitle})},[todolist.id, createTaskTC])
+    const removeTaskHandler = useCallback((taskID: string) => {deleteTaskTC({todolistID: todolist.id, taskID})}, [todolist.id, deleteTaskTC])
+    const changeStatusCheckboxHandler = useCallback((taskID: string, status: TaskStatus) => {changeStatusTaskTC({todolistID:todolist.id, taskID, status})},[todolist.id, changeStatusTaskTC])
+    const editTaskHandler = useCallback((taskID: string, newTitle: string) => {updateTaskTC({todolistID:todolist.id, taskID, title: newTitle})}, [todolist.id, updateTaskTC])
     //interface
     return (
         <span className={"Todolist"}>
