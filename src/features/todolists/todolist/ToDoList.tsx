@@ -15,8 +15,8 @@ type ToDoListPropsType = {
     //value
     todolist: TodolistEntityType
     //function
-    changeFilter: (todolistID: string, filter: FilteredValuesType) => void
-    removeTodolist: (todolistID: string) => void
+    changeFilter: (param:{todolistID: string, filter: FilteredValuesType}) => void
+    removeTodolist: (param: {todolistID: string}) => void
     editToDoList: (todolistID: string, newTitle: string) => void
 }
 //Component
@@ -41,11 +41,11 @@ const ToDoList = React.memo(({todolist,changeFilter, removeTodolist,editToDoList
         fetchTaskTC(todolist.id)
     },[todolist.id, fetchTaskTC])
     const removeTodolistHandler = useCallback(() => {
-       removeTodolist(todolist.id)},[removeTodolist, todolist.id])
+       removeTodolist({todolistID: todolist.id})},[removeTodolist, todolist.id])
     const editToDoListHandler = useCallback((newTitle: string) => {
         editToDoList(todolist.id, newTitle)
     },[editToDoList, todolist.id])
-    const addTaskHandler = useCallback((newTitle: string) => {createTaskTC({todolistID: todolist.id, newTitle})},[todolist.id, createTaskTC])
+    const addTaskHandler = useCallback((param:{newTitle: string}) => {createTaskTC({todolistID: todolist.id, newTitle: param.newTitle})},[todolist.id, createTaskTC])
     const removeTaskHandler = useCallback((taskID: string) => {deleteTaskTC({todolistID: todolist.id, taskID})}, [todolist.id, deleteTaskTC])
     const changeStatusCheckboxHandler = useCallback((taskID: string, status: TaskStatus) => {changeStatusTaskTC({todolistID:todolist.id, taskID, status})},[todolist.id, changeStatusTaskTC])
     const editTaskHandler = useCallback((taskID: string, newTitle: string) => {updateTaskTC({todolistID:todolist.id, taskID, title: newTitle})}, [todolist.id, updateTaskTC])

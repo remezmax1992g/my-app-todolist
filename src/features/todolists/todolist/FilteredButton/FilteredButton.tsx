@@ -6,12 +6,12 @@ import {FilteredValuesType} from "../../../../reducers/todolists-reducer";
 type FilteredButtonType = {
     todolistID: string
     filter: FilteredValuesType
-    changeFilter: (todolistID: string, filter: FilteredValuesType) => void
+    changeFilter: (param: {todolistID: string, filter: FilteredValuesType}) => void
 }
 
 const FilteredButton = React.memo(({todolistID, filter, changeFilter}: FilteredButtonType) => {
         const getChangeFilterHandler = useCallback((todolistID: string, filter: FilteredValuesType) => {
-            return changeFilter(todolistID, filter)
+            return changeFilter({todolistID, filter})
         }, [changeFilter])
         return (
             <div>

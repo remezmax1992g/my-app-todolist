@@ -7,7 +7,7 @@ type AddItemFormTypeProps = {
     label: string
     disabled?: boolean
     //function
-    addItem: (titleInput: string) => void
+    addItem: (param:{newTitle: string}) => void
 }
 
 const AddItemForm = React.memo(({label, disabled = false, addItem}: AddItemFormTypeProps) => {
@@ -18,7 +18,7 @@ const AddItemForm = React.memo(({label, disabled = false, addItem}: AddItemFormT
     const onClickAddTask = () => {
         let newTitle = title.trim()
         if (newTitle) {
-           addItem(newTitle)
+           addItem({newTitle})
             error && setError(false)
         } else {
             setError(true)
