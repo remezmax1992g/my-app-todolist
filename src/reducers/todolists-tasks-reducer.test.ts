@@ -1,10 +1,9 @@
 import {
-    createTodolistTC, deleteTodolistTC,
-    fetchTodolistsTC,
     TodolistEntityType, todosReducer,
 } from "./todolists-reducer";
 import {tasksReducer, TasksType} from "./tasks-reducer";
 import {TaskPriority, TaskStatus} from "../api/tasks-api";
+import {createTodolistTC, deleteTodolistTC, fetchTodolistsTC} from "./todos-action";
 
 test('ids should be equals', () => {
     const startTasksState: TasksType = {};

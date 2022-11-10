@@ -2,39 +2,36 @@ import React, {useCallback, useEffect} from 'react';
 import {Grid, Paper} from "@mui/material";
 import AddItemForm from "../../components/AddItemForm/AddItemForm";
 import ToDoList from "./todolist/ToDoList";
-import {useAppDispatch, useAppSelector} from "../../redux/hook";
-import {
-    changeFilterTodolistAC, createTodolistTC,
-    deleteTodolistTC,
-    fetchTodolistsTC,
-    FilteredValuesType, updateTodolistTC
-} from "../../reducers/todolists-reducer";
+import {useAppSelector} from "../../redux/hook";
+import {FilteredValuesType} from "../../reducers/todolists-reducer";
 import {Navigate} from "react-router-dom";
+import {useActions} from "../../utilits/redux-utilits";
+import {todosAction} from "./todolist";
 
 const TodolistsItem = () => {
     //Store
-    const dispatch = useAppDispatch()
     const todolists = useAppSelector(state => state.todos)
     const isLogin = useAppSelector(state => state.auth.isLogin)
+    const {fetchTodolistsTC, updateTodolistTC, deleteTodolistTC, createTodolistTC, changeFilterTodolistAC} = useActions(todosAction)
     //function
     const changeFilter = useCallback((todolistID: string, filter: FilteredValuesType) => {
-        dispatch(changeFilterTodolistAC({todolistID: todolistID, filter: filter}))
-    }, [dispatch])
+       changeFilterTodolistAC({todolistID, filter})
+    }, [changeFilterTodolistAC])
     const removeTodolist = useCallback((todolistID: string) => {
-        dispatch(deleteTodolistTC({todolistID}))
-    }, [dispatch]);
+       deleteTodolistTC({todolistID})
+    }, [deleteTodolistTC]);
     const addToDoList = useCallback((newTitle: string) => {
-        dispatch(createTodolistTC({newTitle}))
-    }, [dispatch]);
+       createTodolistTC({newTitle})
+    }, [createTodolistTC]);
     const editToDoList = useCallback((todolistID: string, title: string) => {
-        dispatch(updateTodolistTC({todolistID, title}))
-    }, [dispatch]);
+       updateTodolistTC({todolistID, title})
+    }, [updateTodolistTC]);
     useEffect(() => {
         if(!isLogin){
             return
         }
-        dispatch(fetchTodolistsTC())
-    }, [])
+        fetchTodolistsTC()
+    }, [fetchTodolistsTC, isLogin])
     if(!isLogin){
         return <Navigate  to="/Login"/>
     }

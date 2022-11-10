@@ -3,7 +3,7 @@ import {handleServerAppError, handleServerNetworkError} from "../utilits/error-u
 import {authAPI, FieldErrorType, LoginParamsType} from "../api/auth-api";
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {AxiosError} from "axios";
-import {fetchTodolistsTC} from "./todolists-reducer";
+import {fetchTodolistsTC} from "./todos-action";
 
 export const createLog = createAsyncThunk<undefined, LoginParamsType, { rejectValue: { errors: string[], fieldsErrors?: Array<FieldErrorType> } }>("auth/login", async (param, thunkAPI) => {
     try {

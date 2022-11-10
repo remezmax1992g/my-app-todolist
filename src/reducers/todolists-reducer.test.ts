@@ -1,10 +1,10 @@
 import {v1} from "uuid";
 import {
-    changeFilterTodolistAC, changeStatusTodolistAC, createTodolistTC, deleteTodolistTC,
-    fetchTodolistsTC, FilteredValuesType,
-    TodolistEntityType, todosReducer, updateTodolistTC,
+    changeFilterTodolistAC, changeStatusTodolistAC, FilteredValuesType,
+    TodolistEntityType, todosReducer,
 } from "./todolists-reducer";
 import {RequestStatusType} from "./app-reducer";
+import {createTodolistTC, deleteTodolistTC, fetchTodolistsTC, updateTodolistTC} from "./todos-action";
 
 
 let todolistID1 = v1()
