@@ -2,8 +2,8 @@ import {v1} from "uuid";
 import {
     addTodolistAC,
     changeFilterTodolistAC, changeStatusTodolistAC,
-    editTodolistAC, FilteredValuesType,
-    removeTodolistAC, setTodolistsAC, TodolistEntityType, todosReducer,
+    editTodolistAC, fetchTodolistsTC, FilteredValuesType,
+    removeTodolistAC, TodolistEntityType, todosReducer,
 } from "./todolists-reducer";
 import {RequestStatusType} from "./app-reducer";
 
@@ -62,6 +62,6 @@ test("correct status should be changed in todolist", () => {
     expect(endState[1].status).toBe("loading")
 })
 test("todolists should be set to the state", () => {
-    const endState = todosReducer([], setTodolistsAC({todolists: startState}))
+    const endState = todosReducer([], fetchTodolistsTC.fulfilled({todolists: startState}, "requestID"))
     expect(endState.length).toBe(2)
 })

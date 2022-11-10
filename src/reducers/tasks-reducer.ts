@@ -1,10 +1,8 @@
 import {
     addTodolistAC,
-    AddTodolistACType,
+    AddTodolistACType, fetchTodolistsTC,
     removeTodolistAC,
     RemoveTodolistACType,
-    setTodolistsAC,
-    SetTodolistsACType
 } from "./todolists-reducer";
 import {tasksAPI, TaskStatus, TaskType} from "../api/tasks-api";
 import {AppRootState} from "../redux/redux";
@@ -121,7 +119,7 @@ const slice = createSlice(({
         builder.addCase(addTodolistAC, (state, action) => {
             state[action.payload.todolist.id] = []
         })
-        builder.addCase(setTodolistsAC, (state, action) => {
+        builder.addCase(fetchTodolistsTC.fulfilled, (state, action) => {
             action.payload.todolists.forEach(tl => {
                 state[tl.id] = []
             })
@@ -153,7 +151,6 @@ export const tasksReducer = slice.reducer
 export type ActionTaskType =
     | RemoveTodolistACType
     | AddTodolistACType
-    | SetTodolistsACType
 //types for state
 export type TasksType = {
     [key: string]: TaskType[]

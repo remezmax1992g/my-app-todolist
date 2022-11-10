@@ -2,13 +2,8 @@ import {setStatus} from "./app-reducer";
 import {handleServerAppError, handleServerNetworkError} from "../utilits/error-utilits";
 import {authAPI, FieldErrorType, LoginParamsType} from "../api/auth-api";
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {setTodolistsAC} from "./todolists-reducer";
 import {AxiosError} from "axios";
 
-
-const initialState = {
-    isLogin: false
-}
 export const createLog = createAsyncThunk<undefined, LoginParamsType, { rejectValue: { errors: string[], fieldsErrors?: Array<FieldErrorType> } }>("auth/login", async (param, thunkAPI) => {
     try {
         thunkAPI.dispatch(setStatus({status: "loading"}))
@@ -31,7 +26,6 @@ export const deleteLog = createAsyncThunk("auth/logout", async (param, thunkAPI)
         thunkAPI.dispatch(setStatus({status: "loading"}))
         const res = await authAPI.logout()
         if (res.data.resultCode === 0) {
-            thunkAPI.dispatch(setTodolistsAC({todolists: []}))
             thunkAPI.dispatch(setStatus({status: "succeeded"}))
             return;
         } else {
@@ -47,7 +41,9 @@ export const deleteLog = createAsyncThunk("auth/logout", async (param, thunkAPI)
 
 const slice = createSlice({
     name: "auth",
-    initialState: initialState,
+    initialState: {
+        isLogin: false
+    },
     reducers: {
         setIsLogin(state, action: PayloadAction<{ isLogin: boolean }>) {
             state.isLogin = action.payload.isLogin
