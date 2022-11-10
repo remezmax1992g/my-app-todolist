@@ -1,8 +1,8 @@
 import {v1} from "uuid";
 import {
     changeFilterTodolistAC, changeStatusTodolistAC, createTodolistTC, deleteTodolistTC,
-    editTodolistAC, fetchTodolistsTC, FilteredValuesType,
-    TodolistEntityType, todosReducer,
+    fetchTodolistsTC, FilteredValuesType,
+    TodolistEntityType, todosReducer, updateTodolistTC,
 } from "./todolists-reducer";
 import {RequestStatusType} from "./app-reducer";
 
@@ -40,7 +40,7 @@ test("correct todolist should be edited", () => {
 
     let newTodolistTitle = "New Todolist"
 
-    const endState = todosReducer(startState, editTodolistAC({todolistID: todolistID2, title: newTodolistTitle}))
+    const endState = todosReducer(startState, updateTodolistTC.fulfilled({todolistID: todolistID2, title: newTodolistTitle}, "requestID", {todolistID: todolistID2, title: newTodolistTitle}))
     expect(endState[0].title).toBe("What to learn")
     expect(endState[1].title).toBe(newTodolistTitle)
 })

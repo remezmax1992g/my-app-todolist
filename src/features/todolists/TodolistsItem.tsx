@@ -29,8 +29,8 @@ const TodolistsItem = () => {
     const addToDoList = useCallback((newTitle: string) => {
         dispatch(createTodolistTC({newTitle}))
     }, [dispatch]);
-    const editToDoList = useCallback((todoListID: string, newTitle: string) => {
-        dispatch(updateTodolistTC(todoListID, newTitle))
+    const editToDoList = useCallback((todolistID: string, title: string) => {
+        dispatch(updateTodolistTC({todolistID, title}))
     }, [dispatch]);
     if(!isLogin){
         return <Navigate  to="/Login"/>
