@@ -19,8 +19,8 @@ type ToDoListPropsType = {
 const ToDoList = React.memo(({todolist}: ToDoListPropsType) => {
     //store
     const tasks = useAppSelector(state => state.tasks[todolist.id])
-    const {updateTaskTC, createTaskTC, deleteTaskTC, fetchTaskTC, changeStatusTaskTC} = useActions(tasksAction)
-    const {changeFilterTodolistAC, updateTodolistTC, deleteTodolistTC} =useActions(todosAction)
+    const {createTaskTC, fetchTaskTC, deleteTaskTC, updateTaskTC, changeStatusTaskTC} = useActions(tasksAction)
+    const {changeFilterTodolistAC, updateTodolistTC, deleteTodolistTC} = useActions(todosAction)
     //filtering
     let tasksAfterFiltering: Array<TaskType>
     switch (todolist.filter) {
@@ -36,16 +36,26 @@ const ToDoList = React.memo(({todolist}: ToDoListPropsType) => {
     //function
     useEffect(() => {
         fetchTaskTC(todolist.id)
-    },[todolist.id, fetchTaskTC])
+    }, [todolist.id])
+
     const removeTodolistHandler = useCallback(() => {
-      deleteTodolistTC({todolistID: todolist.id})},[deleteTodolistTC, todolist.id])
+        deleteTodolistTC({todolistID: todolist.id})
+    }, [todolist.id])
     const editToDoListHandler = useCallback((title: string) => {
         updateTodolistTC({todolistID: todolist.id, title})
-    },[updateTodolistTC, todolist.id])
-    const addTaskHandler = useCallback((param:{newTitle: string}) => {createTaskTC({todolistID: todolist.id, newTitle: param.newTitle})},[todolist.id, createTaskTC])
-    const removeTaskHandler = useCallback((taskID: string) => {deleteTaskTC({todolistID: todolist.id, taskID})}, [todolist.id, deleteTaskTC])
-    const changeStatusCheckboxHandler = useCallback((taskID: string, status: TaskStatus) => {changeStatusTaskTC({todolistID:todolist.id, taskID, status})},[todolist.id, changeStatusTaskTC])
-    const editTaskHandler = useCallback((taskID: string, newTitle: string) => {updateTaskTC({todolistID:todolist.id, taskID, title: newTitle})}, [todolist.id, updateTaskTC])
+    }, [todolist.id])
+    const addTaskHandler = useCallback((param: { newTitle: string }) => {
+        createTaskTC({todolistID: todolist.id, newTitle: param.newTitle})
+    }, [todolist.id])
+    const removeTaskHandler = useCallback((taskID: string) => {
+        deleteTaskTC({todolistID: todolist.id, taskID})
+    }, [todolist.id])
+    const changeStatusCheckboxHandler = useCallback((taskID: string, status: TaskStatus) => {
+        changeStatusTaskTC({todolistID: todolist.id, taskID, status})
+    }, [todolist.id])
+    const editTaskHandler = useCallback((taskID: string, newTitle: string) => {
+        updateTaskTC({todolistID: todolist.id, taskID, title: newTitle})
+    }, [todolist.id])
     //interface
     return (
         <span className={"Todolist"}>
@@ -66,7 +76,8 @@ const ToDoList = React.memo(({todolist}: ToDoListPropsType) => {
                            removeTask={removeTaskHandler}
                            changeStatusCheckBox={changeStatusCheckboxHandler}
                            editTask={editTaskHandler}/>
-                <FilteredButton todolistID={todolist.id} filter={todolist.filter} changeFilter={changeFilterTodolistAC}/>
+                <FilteredButton todolistID={todolist.id} filter={todolist.filter}
+                                changeFilter={changeFilterTodolistAC}/>
             </span>
         </span>
     );
