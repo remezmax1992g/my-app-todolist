@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import {Grid, Paper} from "@mui/material";
 import AddItemForm from "../../components/AddItemForm/AddItemForm";
 import ToDoList from "./todolist/ToDoList";
@@ -11,19 +11,16 @@ const TodolistsItem = () => {
     //Store
     const todolists = useAppSelector(state => state.todos)
     const isLogin = useAppSelector(state => state.auth.isLogin)
-    const {fetchTodolistsTC, updateTodolistTC, deleteTodolistTC, createTodolistTC} = useActions(todosAction)
-    //function
-    const editToDoList = useCallback((todolistID: string, title: string) => {
-       updateTodolistTC({todolistID, title})
-    }, [updateTodolistTC]);
+    const {fetchTodolistsTC, createTodolistTC} = useActions(todosAction)
+
     useEffect(() => {
-        if(!isLogin){
+        if (!isLogin) {
             return
         }
         fetchTodolistsTC()
     }, [fetchTodolistsTC, isLogin])
-    if(!isLogin){
-        return <Navigate  to="/Login"/>
+    if (!isLogin) {
+        return <Navigate to="/Login"/>
     }
     return (
         <>
@@ -31,14 +28,14 @@ const TodolistsItem = () => {
                 <AddItemForm addItem={createTodolistTC}
                              label={"Type new to-do list"}/></Grid>
             <Grid container spacing={8}>{todolists.map((tl, index) => {
-                return (<Grid item key={index}>
+                return (
+                    <Grid item key={index}>
                         <Paper style={{padding: "10px"}}>
                             <ToDoList
                                 key={tl.id}
                                 todolist={tl}
-                                removeTodolist={deleteTodolistTC}
-                                editToDoList={editToDoList}
-                            /></Paper>
+                            />
+                        </Paper>
                     </Grid>
                 )
             })}

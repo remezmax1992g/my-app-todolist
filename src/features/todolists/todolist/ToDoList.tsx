@@ -14,16 +14,13 @@ import {tasksAction, todosAction} from "./index";
 type ToDoListPropsType = {
     //value
     todolist: TodolistEntityType
-    //function
-    removeTodolist: (param: {todolistID: string}) => void
-    editToDoList: (todolistID: string, newTitle: string) => void
 }
 //Component
-const ToDoList = React.memo(({todolist, removeTodolist, editToDoList}: ToDoListPropsType) => {
+const ToDoList = React.memo(({todolist}: ToDoListPropsType) => {
     //store
     const tasks = useAppSelector(state => state.tasks[todolist.id])
     const {updateTaskTC, createTaskTC, deleteTaskTC, fetchTaskTC, changeStatusTaskTC} = useActions(tasksAction)
-    const {changeFilterTodolistAC} =useActions(todosAction)
+    const {changeFilterTodolistAC, updateTodolistTC, deleteTodolistTC} =useActions(todosAction)
     //filtering
     let tasksAfterFiltering: Array<TaskType>
     switch (todolist.filter) {
@@ -41,10 +38,10 @@ const ToDoList = React.memo(({todolist, removeTodolist, editToDoList}: ToDoListP
         fetchTaskTC(todolist.id)
     },[todolist.id, fetchTaskTC])
     const removeTodolistHandler = useCallback(() => {
-       removeTodolist({todolistID: todolist.id})},[removeTodolist, todolist.id])
-    const editToDoListHandler = useCallback((newTitle: string) => {
-        editToDoList(todolist.id, newTitle)
-    },[editToDoList, todolist.id])
+      deleteTodolistTC({todolistID: todolist.id})},[deleteTodolistTC, todolist.id])
+    const editToDoListHandler = useCallback((title: string) => {
+        updateTodolistTC({todolistID: todolist.id, title})
+    },[updateTodolistTC, todolist.id])
     const addTaskHandler = useCallback((param:{newTitle: string}) => {createTaskTC({todolistID: todolist.id, newTitle: param.newTitle})},[todolist.id, createTaskTC])
     const removeTaskHandler = useCallback((taskID: string) => {deleteTaskTC({todolistID: todolist.id, taskID})}, [todolist.id, deleteTaskTC])
     const changeStatusCheckboxHandler = useCallback((taskID: string, status: TaskStatus) => {changeStatusTaskTC({todolistID:todolist.id, taskID, status})},[todolist.id, changeStatusTaskTC])
