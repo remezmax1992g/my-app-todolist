@@ -5,25 +5,25 @@ import EditableSpan from "../../../components/EditableSpan/EditableSpan";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {IconButton} from "@mui/material";
 import FilteredButton from "./FilteredButton/FilteredButton";
-import {FilteredValuesType, TodolistEntityType} from "../../../reducers/todolists-reducer";
+import {TodolistEntityType} from "../../../reducers/todolists-reducer";
 import {TaskStatus, TaskType} from "../../../api/tasks-api";
 import {useAppSelector} from "../../../redux/hook";
 import {useActions} from "../../../utilits/redux-utilits";
-import {tasksAction} from "./index";
+import {tasksAction, todosAction} from "./index";
 //type
 type ToDoListPropsType = {
     //value
     todolist: TodolistEntityType
     //function
-    changeFilter: (param:{todolistID: string, filter: FilteredValuesType}) => void
     removeTodolist: (param: {todolistID: string}) => void
     editToDoList: (todolistID: string, newTitle: string) => void
 }
 //Component
-const ToDoList = React.memo(({todolist,changeFilter, removeTodolist,editToDoList}: ToDoListPropsType) => {
+const ToDoList = React.memo(({todolist, removeTodolist, editToDoList}: ToDoListPropsType) => {
     //store
     const tasks = useAppSelector(state => state.tasks[todolist.id])
     const {updateTaskTC, createTaskTC, deleteTaskTC, fetchTaskTC, changeStatusTaskTC} = useActions(tasksAction)
+    const {changeFilterTodolistAC} =useActions(todosAction)
     //filtering
     let tasksAfterFiltering: Array<TaskType>
     switch (todolist.filter) {
@@ -69,7 +69,7 @@ const ToDoList = React.memo(({todolist,changeFilter, removeTodolist,editToDoList
                            removeTask={removeTaskHandler}
                            changeStatusCheckBox={changeStatusCheckboxHandler}
                            editTask={editTaskHandler}/>
-                <FilteredButton todolistID={todolist.id} filter={todolist.filter} changeFilter={changeFilter}/>
+                <FilteredButton todolistID={todolist.id} filter={todolist.filter} changeFilter={changeFilterTodolistAC}/>
             </span>
         </span>
     );

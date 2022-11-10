@@ -11,7 +11,7 @@ const TodolistsItem = () => {
     //Store
     const todolists = useAppSelector(state => state.todos)
     const isLogin = useAppSelector(state => state.auth.isLogin)
-    const {fetchTodolistsTC, updateTodolistTC, deleteTodolistTC, createTodolistTC, changeFilterTodolistAC} = useActions(todosAction)
+    const {fetchTodolistsTC, updateTodolistTC, deleteTodolistTC, createTodolistTC} = useActions(todosAction)
     //function
     const editToDoList = useCallback((todolistID: string, title: string) => {
        updateTodolistTC({todolistID, title})
@@ -36,7 +36,6 @@ const TodolistsItem = () => {
                             <ToDoList
                                 key={tl.id}
                                 todolist={tl}
-                                changeFilter={changeFilterTodolistAC}
                                 removeTodolist={deleteTodolistTC}
                                 editToDoList={editToDoList}
                             /></Paper>
