@@ -17,9 +17,6 @@ const TodolistsItem = () => {
     const todolists = useAppSelector(state => state.todos)
     const isLogin = useAppSelector(state => state.auth.isLogin)
     //function
-    useEffect(() => {
-        dispatch(fetchTodolistsTC())
-    }, [])
     const changeFilter = useCallback((todolistID: string, filter: FilteredValuesType) => {
         dispatch(changeFilterTodolistAC({todolistID: todolistID, filter: filter}))
     }, [dispatch])
@@ -32,6 +29,12 @@ const TodolistsItem = () => {
     const editToDoList = useCallback((todolistID: string, title: string) => {
         dispatch(updateTodolistTC({todolistID, title}))
     }, [dispatch]);
+    useEffect(() => {
+        if(!isLogin){
+            return
+        }
+        dispatch(fetchTodolistsTC())
+    }, [])
     if(!isLogin){
         return <Navigate  to="/Login"/>
     }

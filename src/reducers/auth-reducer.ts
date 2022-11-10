@@ -3,6 +3,7 @@ import {handleServerAppError, handleServerNetworkError} from "../utilits/error-u
 import {authAPI, FieldErrorType, LoginParamsType} from "../api/auth-api";
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {AxiosError} from "axios";
+import {fetchTodolistsTC} from "./todolists-reducer";
 
 export const createLog = createAsyncThunk<undefined, LoginParamsType, { rejectValue: { errors: string[], fieldsErrors?: Array<FieldErrorType> } }>("auth/login", async (param, thunkAPI) => {
     try {
@@ -27,6 +28,7 @@ export const deleteLog = createAsyncThunk("auth/logout", async (param, thunkAPI)
         const res = await authAPI.logout()
         if (res.data.resultCode === 0) {
             thunkAPI.dispatch(setStatus({status: "succeeded"}))
+            thunkAPI.dispatch(fetchTodolistsTC.fulfilled({todolists: []}, "requestID"))
             return;
         } else {
             handleServerAppError(res.data, thunkAPI.dispatch)
