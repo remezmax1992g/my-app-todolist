@@ -1,7 +1,5 @@
 import {
-     createTodolistTC, fetchTodolistsTC,
-    removeTodolistAC,
-    RemoveTodolistACType,
+    createTodolistTC, deleteTodolistTC, fetchTodolistsTC,
 } from "./todolists-reducer";
 import {tasksAPI, TaskStatus, TaskType} from "../api/tasks-api";
 import {AppRootState} from "../redux/redux";
@@ -112,7 +110,7 @@ const slice = createSlice(({
     initialState: initialStateForTasks,
     reducers: {},
     extraReducers: (builder) => {
-        builder.addCase(removeTodolistAC, (state, action) => {
+        builder.addCase(deleteTodolistTC.fulfilled, (state, action) => {
             delete state[action.payload.todolistID]
         })
         builder.addCase(createTodolistTC.fulfilled, (state, action) => {
@@ -146,9 +144,6 @@ const slice = createSlice(({
 //reducer
 export const tasksReducer = slice.reducer
 
-//type for Action
-export type ActionTaskType =
-    | RemoveTodolistACType
 //types for state
 export type TasksType = {
     [key: string]: TaskType[]

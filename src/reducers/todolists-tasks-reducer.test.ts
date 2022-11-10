@@ -1,7 +1,6 @@
 import {
-    createTodolistTC,
+    createTodolistTC, deleteTodolistTC,
     fetchTodolistsTC,
-    removeTodolistAC,
     TodolistEntityType, todosReducer,
 } from "./todolists-reducer";
 import {tasksReducer, TasksType} from "./tasks-reducer";
@@ -44,7 +43,7 @@ test('property with todolistId should be deleted', () => {
 
     };
 
-    const action = removeTodolistAC({todolistID: "todolistId2"});
+    const action = deleteTodolistTC.fulfilled({todolistID: "todolistId2"}, "requestID", {todolistID:"todolistId2"});
 
     const endState = tasksReducer(startState, action)
 
