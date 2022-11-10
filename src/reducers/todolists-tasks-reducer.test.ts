@@ -1,5 +1,6 @@
 import {
-    addTodolistAC, fetchTodolistsTC,
+    createTodolistTC,
+    fetchTodolistsTC,
     removeTodolistAC,
     TodolistEntityType, todosReducer,
 } from "./todolists-reducer";
@@ -16,7 +17,7 @@ test('ids should be equals', () => {
         addedDate: "",
         order: 0
     }
-    const action = addTodolistAC({todolist: todolist});
+    const action = createTodolistTC.fulfilled({todolist: todolist}, "requestID",{newTitle: "new todolist"});
 
     const endTasksState = tasksReducer(startTasksState, action)
     const endTodolistsState = todosReducer(startTodolistsState, action)

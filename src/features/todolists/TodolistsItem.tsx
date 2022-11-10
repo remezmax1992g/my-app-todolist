@@ -27,7 +27,7 @@ const TodolistsItem = () => {
         dispatch(deleteTodolistTC(todolistID))
     }, [dispatch]);
     const addToDoList = useCallback((newTitle: string) => {
-        dispatch(createTodolistTC(newTitle))
+        dispatch(createTodolistTC({newTitle}))
     }, [dispatch]);
     const editToDoList = useCallback((todoListID: string, newTitle: string) => {
         dispatch(updateTodolistTC(todoListID, newTitle))

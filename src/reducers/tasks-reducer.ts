@@ -1,6 +1,5 @@
 import {
-    addTodolistAC,
-    AddTodolistACType, fetchTodolistsTC,
+     createTodolistTC, fetchTodolistsTC,
     removeTodolistAC,
     RemoveTodolistACType,
 } from "./todolists-reducer";
@@ -116,7 +115,7 @@ const slice = createSlice(({
         builder.addCase(removeTodolistAC, (state, action) => {
             delete state[action.payload.todolistID]
         })
-        builder.addCase(addTodolistAC, (state, action) => {
+        builder.addCase(createTodolistTC.fulfilled, (state, action) => {
             state[action.payload.todolist.id] = []
         })
         builder.addCase(fetchTodolistsTC.fulfilled, (state, action) => {
@@ -150,7 +149,6 @@ export const tasksReducer = slice.reducer
 //type for Action
 export type ActionTaskType =
     | RemoveTodolistACType
-    | AddTodolistACType
 //types for state
 export type TasksType = {
     [key: string]: TaskType[]
