@@ -9,7 +9,7 @@ import {TodolistEntityType} from "../../../reducers/todolists-reducer";
 import {TaskStatus, TaskType} from "../../../api/tasks-api";
 import {useAppSelector} from "../../../redux/hook";
 import {useActions} from "../../../utilits/redux-utilits";
-import {tasksAction, todosAction} from "./index";
+import {tasksAction, todosAction} from "../index";
 //type
 type ToDoListPropsType = {
     //value

@@ -5,7 +5,7 @@ import ToDoList from "./todolist/ToDoList";
 import {useAppSelector} from "../../redux/hook";
 import {Navigate} from "react-router-dom";
 import {useActions} from "../../utilits/redux-utilits";
-import {todosAction} from "./todolist";
+import {todosAction} from "./index";
 
 const TodolistsItem = () => {
     //Store

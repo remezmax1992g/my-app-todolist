@@ -6,25 +6,25 @@ import Button from "@mui/material/Button";
 import TodolistsItem from "../features/todolists/TodolistsItem";
 import ErrorSnackbar from "../components/ErrorSnackbar/ErrorSnackbar";
 import {useAppDispatch, useAppSelector} from "../redux/hook";
-import Login from "../features/login/Login";
 import {Navigate, Route, Routes} from "react-router-dom";
 import {getIsInitialized} from "../reducers/app-reducer";
-import {deleteLog} from "../reducers/auth-reducer";
+import {authAction, Login} from "../features/login";
+import {useActions} from "../utilits/redux-utilits";
 
 
 //Component
 function App() {
-    const status = useAppSelector(state => state.app.status)
-    const isInitialized = useAppSelector(state => state.app.isInitialized)
+    const {status, isInitialized}  = useAppSelector(state => state.app)
     const isLogin = useAppSelector(state => state.auth.isLogin)
+    const {deleteLog} = useActions(authAction)
     const dispatch = useAppDispatch()
 
     useEffect(() => {
         dispatch(getIsInitialized())
     }, [])
     const logoutHandler = useCallback(() => {
-        dispatch(deleteLog())
-    }, [dispatch])
+        deleteLog()
+    }, [])
     //UI
     if (!isInitialized) {
         return <div style={{position: "fixed", top: "30%", textAlign: "center", width: "100%"}}><CircularProgress

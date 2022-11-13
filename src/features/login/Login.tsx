@@ -3,9 +3,10 @@ import {Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, Tex
 import Button from "@mui/material/Button";
 import {FormikHelpers, useFormik} from "formik";
 import {useAppDispatch, useAppSelector} from "../../redux/hook";
-import {createLog} from "../../reducers/auth-reducer";
 import {Navigate} from "react-router-dom";
 import {LoginParamsType} from "../../api/auth-api";
+import {createLog} from "../../reducers/auth-action";
+import {authAction} from "./index";
 
 type FormikErrorType = {
     email?: string
@@ -23,7 +24,7 @@ const Login = () => {
                     rememberMe: false
                 },
                 onSubmit: async (values:LoginParamsType, formikHelpers:FormikHelpers<LoginParamsType>) => {
-                    const res = await dispatch(createLog(values))
+                    const res = await dispatch(authAction.createLog(values))
 
                     if(createLog.rejected.match(res)){
                         if(res.payload?.fieldsErrors?.length){
