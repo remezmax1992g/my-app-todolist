@@ -19,7 +19,7 @@ type ToDoListPropsType = {
 const ToDoList = React.memo(({todolist}: ToDoListPropsType) => {
     //store
     const tasks = useAppSelector(state => state.tasks[todolist.id])
-    const {createTaskTC, fetchTaskTC, deleteTaskTC, updateTaskTC, changeStatusTaskTC} = useActions(tasksAction)
+    const {createTaskTC, fetchTaskTC} = useActions(tasksAction)
     const {changeFilterTodolistAC, updateTodolistTC, deleteTodolistTC} = useActions(todosAction)
     //filtering
     let tasksAfterFiltering: Array<TaskType>
@@ -36,26 +36,17 @@ const ToDoList = React.memo(({todolist}: ToDoListPropsType) => {
     //function
     useEffect(() => {
         fetchTaskTC(todolist.id)
-    }, [todolist.id])
+    }, [fetchTaskTC, todolist.id])
 
     const removeTodolistHandler = useCallback(() => {
         deleteTodolistTC({todolistID: todolist.id})
-    }, [todolist.id])
+    }, [deleteTodolistTC, todolist.id])
     const editToDoListHandler = useCallback((title: string) => {
         updateTodolistTC({todolistID: todolist.id, title})
-    }, [todolist.id])
+    }, [updateTodolistTC, todolist.id])
     const addTaskHandler = useCallback((param: { newTitle: string }) => {
         createTaskTC({todolistID: todolist.id, newTitle: param.newTitle})
-    }, [todolist.id])
-    const removeTaskHandler = useCallback((taskID: string) => {
-        deleteTaskTC({todolistID: todolist.id, taskID})
-    }, [todolist.id])
-    const changeStatusCheckboxHandler = useCallback((taskID: string, status: TaskStatus) => {
-        changeStatusTaskTC({todolistID: todolist.id, taskID, status})
-    }, [todolist.id])
-    const editTaskHandler = useCallback((taskID: string, newTitle: string) => {
-        updateTaskTC({todolistID: todolist.id, taskID, title: newTitle})
-    }, [todolist.id])
+    }, [createTaskTC, todolist.id])
     //interface
     return (
         <span className={"Todolist"}>
@@ -73,9 +64,7 @@ const ToDoList = React.memo(({todolist}: ToDoListPropsType) => {
                              label={"Type task"}
                              disabled={todolist.status === "loading"}/>
                 <TasksItem tasks={tasksAfterFiltering}
-                           removeTask={removeTaskHandler}
-                           changeStatusCheckBox={changeStatusCheckboxHandler}
-                           editTask={editTaskHandler}/>
+                           todolistID={todolist.id}/>
                 <FilteredButton todolistID={todolist.id} filter={todolist.filter}
                                 changeFilter={changeFilterTodolistAC}/>
             </span>

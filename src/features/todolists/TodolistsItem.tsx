@@ -24,22 +24,28 @@ const TodolistsItem = () => {
     }
     return (
         <>
-            <Grid container style={{padding: "10px"}}>
-                <AddItemForm addItem={createTodolistTC}
-                             label={"Type new to-do list"}/></Grid>
-            <Grid container spacing={8}>{todolists.map((tl, index) => {
-                return (
-                    <Grid item key={index}>
-                        <Paper style={{padding: "10px"}}>
-                            <ToDoList
-                                key={tl.id}
-                                todolist={tl}
-                            />
-                        </Paper>
+            {!isLogin
+                ? <Navigate to="/Login"/>
+                : <>
+                    <Grid container style={{padding: "10px"}}>
+                        <AddItemForm addItem={createTodolistTC}
+                                     label={"Type new to-do list"}/>
                     </Grid>
-                )
-            })}
-            </Grid>
+                    <Grid container spacing={8}>{todolists.map((tl, index) => {
+                        return (
+                            <Grid item key={index}>
+                                <Paper style={{padding: "10px"}}>
+                                    <ToDoList
+                                        key={tl.id}
+                                        todolist={tl}
+                                    />
+                                </Paper>
+                            </Grid>
+                        )
+                    })}
+                    </Grid>
+                </>
+            }
         </>
     );
 };
