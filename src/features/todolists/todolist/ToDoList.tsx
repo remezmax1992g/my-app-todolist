@@ -3,7 +3,7 @@ import TasksItem from "./TasksItem/TasksItem";
 import AddItemForm from "../../../components/AddItemForm/AddItemForm";
 import EditableSpan from "../../../components/EditableSpan/EditableSpan";
 import DeleteIcon from "@mui/icons-material/Delete";
-import {IconButton} from "@mui/material";
+import {IconButton, Paper} from "@mui/material";
 import FilteredButton from "./FilteredButton/FilteredButton";
 import {TodolistEntityType} from "../../../reducers/todolists-reducer";
 import {TaskStatus, TaskType} from "../../../api/tasks-api";
@@ -49,15 +49,17 @@ const ToDoList = React.memo(({todolist}: ToDoListPropsType) => {
     }, [createTaskTC, todolist.id])
     //interface
     return (
-        <span className={"Todolist"}>
+        <Paper className={"Todolist"} style={{padding: "10px", position: "relative"}}>
+            <IconButton onClick={removeTodolistHandler}
+                        disabled={todolist.status === "loading"}
+                        style={{position: "absolute", top:"-5px", left: "260x"}}>
+                    <DeleteIcon/>
+            </IconButton>
             <h2>
                 <EditableSpan title={todolist.title}
                               onChangeTitle={editToDoListHandler}
                               disabled={todolist.status === "loading"}/>
-                 <IconButton onClick={removeTodolistHandler}
-                             disabled={todolist.status === "loading"}>
-                    <DeleteIcon/>
-                 </IconButton>
+
             </h2>
             <span>
                 <AddItemForm addItem={addTaskHandler}
@@ -68,7 +70,7 @@ const ToDoList = React.memo(({todolist}: ToDoListPropsType) => {
                 <FilteredButton todolistID={todolist.id} filter={todolist.filter}
                                 changeFilter={changeFilterTodolistAC}/>
             </span>
-        </span>
+        </Paper>
     );
 });
 

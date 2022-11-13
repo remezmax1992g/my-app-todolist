@@ -26,15 +26,16 @@ const Task = React.memo(({task, todolistID}: TaskPropsType) => {
         }, [deleteTaskTC, task.id, todolistID])
 
         return (
-            <span>
+            <span style={{position: "relative"}}>
                 <Checkbox checked={task.status === TaskStatus.Completed}
                           onChange={changeStatusCheckboxHandler}/>
                 <EditableSpan title={task.title}
                               status={task.status}
                               onChangeTitle={editTaskHandler}/>
                 <IconButton aria-label="delete"
-                            onClick={removeTaskHandler}>
-                    <DeleteIcon/>
+                            onClick={removeTaskHandler}
+                            style={{position: "absolute", left: "250px", top:"-10px"}}>
+                    <DeleteIcon fontSize="small"/>
                 </IconButton>
             </span>
         );

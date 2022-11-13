@@ -15,7 +15,7 @@ const TasksItem = React.memo(({tasks, todolistID}: TaskItemTypeProps) => {
                 <div key={index}><Task task={t}
                          todolistID={todolistID}/></div>
             )
-            : <span>Your task's list is empty</span>
+            : <div style={{padding: "10px", color: "grey"}}>No task</div>
         return (
             <span>
             <div className={"taskListItem"}>{taskListItem}</div>
