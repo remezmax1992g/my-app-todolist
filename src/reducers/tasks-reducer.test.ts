@@ -3,7 +3,7 @@ import {
     TasksType
 } from "./tasks-reducer";
 import {TaskPriority, TaskStatus} from "../api/tasks-api";
-import {changeStatusTaskTC, createTaskTC, deleteTaskTC, fetchTaskTC, updateTaskTC} from "./tasks-action";
+import {createTaskTC, deleteTaskTC, fetchTaskTC, updateTaskTC} from "./tasks-action";
 
 let startState: TasksType
 beforeEach(() => {
@@ -46,13 +46,13 @@ test('correct task should be added to correct array', () => {
 })
 test('status of specified task should be changed', () => {
 
-    const endState = tasksReducer(startState, changeStatusTaskTC.fulfilled({todolistID: "todolistID2", taskID: "2", status: TaskStatus.Completed}, "requestID", {todolistID: "todolistID2", taskID: "2", status: TaskStatus.Completed}))
+    const endState = tasksReducer(startState, updateTaskTC.fulfilled({todolistID: "todolistID2", taskID: "2", model:{ ...startState["todolistID2"]["2"], status: TaskStatus.Completed}}, "requestID", {todolistID: "todolistID2", taskID: "2", model: {status: TaskStatus.Completed}}))
     expect(endState["todolistID2"][1].status).toBe(TaskStatus.Completed);
     expect(endState["todolistID1"][1].status).toBe(TaskStatus.New);
 });
 test('title of specified task should be changed', () => {
 
-    const endState = tasksReducer(startState, updateTaskTC.fulfilled({todolistID: "todolistID2", taskID: "2", title: "Milkyway"}, "requestID", {todolistID: "todolistID2", taskID: "2", title: "Milkyway"}))
+    const endState = tasksReducer(startState, updateTaskTC.fulfilled({todolistID: "todolistID2", taskID: "2", model:{ ...startState["todolistID2"]["2"], title: "Milkyway"}}, "requestID", {todolistID: "todolistID2", taskID: "2", model: {title: "Milkyway"}}))
     expect(endState["todolistID2"][1].title).toBe("Milkyway");
     expect(endState["todolistID1"][1].title).toBe("JS");
 });
