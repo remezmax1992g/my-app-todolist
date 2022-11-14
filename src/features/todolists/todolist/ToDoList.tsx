@@ -52,7 +52,7 @@ const ToDoList = React.memo(({todolist}: ToDoListPropsType) => {
         <Paper className={"Todolist"} style={{padding: "10px", position: "relative"}}>
             <IconButton onClick={removeTodolistHandler}
                         disabled={todolist.status === "loading"}
-                        style={{position: "absolute", top:"-5px", left: "260x"}}>
+                        style={{position: "absolute", top:"-5px", right: "-5px"}}>
                     <DeleteIcon/>
             </IconButton>
             <h2>

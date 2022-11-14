@@ -61,6 +61,6 @@ test("correct status should be changed in todolist", () => {
     expect(endState[1].status).toBe("loading")
 })
 test("todolists should be set to the state", () => {
-    const endState = todosReducer([], fetchTodolistsTC.fulfilled({todolists: startState}, "requestID"))
+    const endState = todosReducer([], fetchTodolistsTC.fulfilled({todolists: startState}, "requestID", undefined))
     expect(endState.length).toBe(2)
 })

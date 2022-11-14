@@ -57,7 +57,7 @@ test('empty task array should be added when we set todolists', () => {
         {id: "todolistID1", title: 'What to learn', filter: 'all', addedDate: "", order: 0},
         {id: "todolistID2", title: 'What to buy', filter: 'all', addedDate: "", order: 0},
     ]
-    const endState = tasksReducer({}, fetchTodolistsTC.fulfilled({todolists: startState}, "requestID"))
+    const endState = tasksReducer({}, fetchTodolistsTC.fulfilled({todolists: startState}, "requestID", undefined))
     expect(endState["todolistID1"]).toStrictEqual([])
     expect(endState["todolistID2"]).toStrictEqual([])
 });

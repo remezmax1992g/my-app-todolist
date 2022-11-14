@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import './App.css';
 import {AppBar, CircularProgress, Container, IconButton, LinearProgress, Toolbar, Typography} from "@mui/material";
 import {Menu} from "@mui/icons-material";
@@ -22,9 +22,7 @@ function App() {
     useEffect(() => {
         dispatch(getIsInitialized())
     }, [])
-    const logoutHandler = useCallback(() => {
-        deleteLog()
-    }, [])
+
     //UI
     if (!isInitialized) {
         return <div style={{position: "fixed", top: "30%", textAlign: "center", width: "100%"}}><CircularProgress
@@ -47,11 +45,11 @@ function App() {
                     <Typography variant="h6" component="div" sx={{flexGrow: 2}}>
                         Menu
                     </Typography>
-                    {isLogin && <Button onClick={logoutHandler} color="inherit">Log out</Button>}
+                    {isLogin && <Button onClick={deleteLog} color="inherit">Log out</Button>}
                 </Toolbar>
                 {status === "loading" && <LinearProgress/>}
             </AppBar>
-            <Container fixed>
+            <Container fixed style={{minWidth: "90%"}}>
                 <Routes>
                     <Route path={"/"} element={<Navigate to="/Login"/>}/>
                     <Route path={"/my-app-todolist"} element={<TodolistsItem/>}/>
