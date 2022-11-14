@@ -19,7 +19,7 @@ export const fetchTodolistsTC = createAsyncThunk<{todolists: TodolistType[]}, un
         return thunkAPI.rejectWithValue({})
     }
 })
-export const createTodolistTC = createAsyncThunk<{todolist: TodolistType}, { newTitle: string },  AppThunkError>('todos/createTodolist', async (param: { newTitle: string }, thunkAPI) => {
+export const createTodolistTC = createAsyncThunk<{todolist: TodolistType},{ newTitle: string },  AppThunkError>('todos/createTodolist', async (param, thunkAPI) => {
     try {
         thunkAPI.dispatch(setStatus({status: "loading"}))
         const res = await todolistsAPI.createTodolist(param.newTitle)
@@ -37,7 +37,7 @@ export const createTodolistTC = createAsyncThunk<{todolist: TodolistType}, { new
         return thunkAPI.rejectWithValue({})
     }
 })
-export const deleteTodolistTC = createAsyncThunk<{todolistID: string}, {todolistID: string},  AppThunkError>('todos/deleteTodolist', async (param: { todolistID: string }, thunkAPI) => {
+export const deleteTodolistTC = createAsyncThunk<{todolistID: string}, {todolistID: string},  AppThunkError>('todos/deleteTodolist', async (param, thunkAPI) => {
     try {
         thunkAPI.dispatch(setStatus({status: "loading"}))
         thunkAPI.dispatch(changeStatusTodolistAC({todolistID: param.todolistID, status: "loading"}))
