@@ -35,7 +35,9 @@ const ToDoList = React.memo(({todolist}: ToDoListPropsType) => {
     }
     //function
     useEffect(() => {
-        fetchTaskTC(todolist.id)
+        if(!tasks.length){
+            fetchTaskTC(todolist.id)
+        }
     }, [fetchTaskTC, todolist.id])
 
     const removeTodolistHandler = useCallback(() => {

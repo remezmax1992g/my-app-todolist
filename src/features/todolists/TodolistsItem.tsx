@@ -17,11 +17,11 @@ const TodolistsItem = () => {
         if (!isLogin) {
             return
         }
-        fetchTodolistsTC()
+        if(!todolists.length){
+            fetchTodolistsTC()
+        }
     }, [fetchTodolistsTC, isLogin])
-    if (!isLogin) {
-        return <Navigate to="/Login"/>
-    }
+
     return (
         <>
             {!isLogin

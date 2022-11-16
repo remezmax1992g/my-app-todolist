@@ -1,19 +1,12 @@
-import {combineReducers} from "redux";
-import {ActionTodolistType, todosReducer} from "../reducers/todolists-reducer";
-import {tasksReducer} from "../reducers/tasks-reducer";
+import {ActionTodolistType} from "../reducers/todolists-reducer";
 import thunkMiddleWare, {ThunkAction, ThunkDispatch} from "redux-thunk";
-import {appReducer, AppStatusErrorActionType} from "../reducers/app-reducer";
-import {ActionAuthType, authReducer} from "../reducers/auth-reducer";
+import {AppStatusErrorActionType} from "../reducers/app-reducer";
+import {ActionAuthType} from "../reducers/auth-reducer";
 import {configureStore} from "@reduxjs/toolkit";
 import {FieldErrorType} from "../api/auth-api";
+import {rootReducer} from "./reducers";
 
 
-const rootReducer = combineReducers({
-    todos: todosReducer,
-    tasks: tasksReducer,
-    app: appReducer,
-    auth: authReducer
-})
 export type AppActionType = ActionTodolistType | AppStatusErrorActionType | ActionAuthType
 export type AppRootState = ReturnType<typeof store.getState>
 export type AppDispatch = ThunkDispatch<AppRootState, unknown, AppActionType>
@@ -32,3 +25,9 @@ export const store = configureStore({
 
 // @ts-ignore
 window.store = store
+
+if(process.env.NODE_ENV === 'development' && module.hot){
+    module.hot.accept('./reducers', () => {
+        store.replaceReducer(rootReducer)
+    })
+}
