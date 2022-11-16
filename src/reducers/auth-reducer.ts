@@ -12,12 +12,13 @@ const slice = createSlice({
         }
     },
     extraReducers: (builder) => {
-        builder.addCase(createLog.fulfilled, (state) => {
-            state.isLogin = true
-        })
-        builder.addCase(deleteLog.fulfilled, (state) => {
-            state.isLogin = false
-        })
+        builder
+            .addCase(createLog.fulfilled, (state) => {
+                state.isLogin = true
+            })
+            .addCase(deleteLog.fulfilled, (state) => {
+                state.isLogin = false
+            })
     }
 })
 
